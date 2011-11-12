@@ -12,7 +12,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 /**
- * It is a wicket locator for Selenium. For example, Using //myform[2]//name as
+ * It is a Wicket locator for Selenium. For example, Using //myform[2]//name as
  * the path it will first locate the 3rd element (breadth-first search) with
  * wicket:id="myform" and then the first element in it with wicket:id="name". If
  * it must be an immediate child, use / instead of //.
@@ -31,8 +31,7 @@ public class ByWicketIdPath extends By {
 
 	@Override
 	public List<WebElement> findElements(SearchContext context) {
-		WebElement element = findWicketElementFrom(getRootElement(context),
-				path);
+		WebElement element = findByPath(getRootElement(context), path);
 		return element == null ? null : Arrays
 				.asList(new WebElement[] { element });
 	}
@@ -46,7 +45,7 @@ public class ByWicketIdPath extends By {
 		}
 	}
 
-	private WebElement findWicketElementFrom(WebElement baseElement, String path) {
+	public WebElement findByPath(WebElement baseElement, String path) {
 		Matcher matcher = stepPattern.matcher(path);
 		while (matcher.find()) {
 			boolean isAnyLevelDeep = matcher.group(1).equals("//");
@@ -56,8 +55,8 @@ public class ByWicketIdPath extends By {
 			if (indexString != null) {
 				index = Integer.parseInt(indexString);
 			}
-			WebElement child = findChild(baseElement, isAnyLevelDeep, wicketId,
-					index);
+			WebElement child = findByWicketId(baseElement, isAnyLevelDeep,
+					wicketId, index);
 			if (child == null) {
 				return null;
 			}
@@ -66,7 +65,7 @@ public class ByWicketIdPath extends By {
 		return baseElement;
 	}
 
-	private WebElement findChild(WebElement baseElement,
+	public WebElement findByWicketId(WebElement baseElement,
 			boolean isAnyLevelDeep, String wicketId, int index) {
 		int noElementsFound = 0;
 		Queue<WebElement> queue = new ArrayQueue<WebElement>();
@@ -86,7 +85,7 @@ public class ByWicketIdPath extends By {
 		return null;
 	}
 
-	private boolean matchesWicketId(WebElement element, String wicketId) {
+	public boolean matchesWicketId(WebElement element, String wicketId) {
 		String wicketIdValue = element.getAttribute("wicket:id");
 		if (wicketIdValue != null && wicketIdValue.equals(wicketId)) {
 			return true;

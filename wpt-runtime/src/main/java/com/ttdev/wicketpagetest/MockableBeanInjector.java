@@ -38,6 +38,10 @@ public class MockableBeanInjector extends Injector implements
 		this.originalInjector = originalInjector;
 	}
 
+	public MockableBeanInjector() {
+		this(Mock.class, null);
+	}
+
 	/**
 	 * Install the specified MockableBeanInjector into the specified webapp.
 	 * 
@@ -74,7 +78,9 @@ public class MockableBeanInjector extends Injector implements
 		// The injector will inject a bean into the fields that are not null.
 		// So, if a mocked object has been injected in the previous step, the
 		// injector won't touch it.
-		originalInjector.inject(object);
+		if (originalInjector != null) {
+			originalInjector.inject(object);
+		}
 
 	}
 

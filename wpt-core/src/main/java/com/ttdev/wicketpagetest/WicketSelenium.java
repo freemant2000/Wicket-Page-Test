@@ -102,6 +102,8 @@ public class WicketSelenium {
 	 */
 	public void openNonBookmarkablePage(Class<? extends Page> pageClass,
 			Object... constructorArgs) {
+		// use plain mocking possible? unlikely as it is Wicket that creates
+		// the instance from the class.
 		MockableBeanInjector.mockBean(LauncherPage.PAGE_FACTORY_FIELD_NAME,
 				new DefaultPageFactory(pageClass, constructorArgs));
 		openBookmarkablePage(LauncherPage.class);

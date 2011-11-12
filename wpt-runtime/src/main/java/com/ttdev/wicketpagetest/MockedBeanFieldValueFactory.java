@@ -40,6 +40,10 @@ public class MockedBeanFieldValueFactory implements IFieldValueFactory,
 
 	private Class<? extends Annotation> annotClass;
 
+	/**
+	 * The mocked beans are generally not serializable, so make sure this field
+	 * is marked as transient.
+	 */
 	transient private Map<String, Object> mockedBeans;
 
 	/**
