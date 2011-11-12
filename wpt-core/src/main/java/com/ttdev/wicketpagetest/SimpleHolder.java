@@ -1,5 +1,13 @@
 package com.ttdev.wicketpagetest;
 
+/**
+ * A simple implementation for {@link Holder}.
+ * 
+ * @author Kent Tong
+ * 
+ * @param <T>
+ *            the type of the object being held
+ */
 public class SimpleHolder<T> implements Holder<T> {
 	private T e;
 

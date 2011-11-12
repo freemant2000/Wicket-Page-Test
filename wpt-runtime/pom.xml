@@ -6,7 +6,6 @@
 		<version>2.1.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.ttdev</groupId>
 	<artifactId>wpt-runtime</artifactId>
 	<version>${wpt.version}</version>
 	<name>wpt-runtime</name>

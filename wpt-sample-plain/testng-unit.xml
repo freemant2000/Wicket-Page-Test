@@ -16,7 +16,7 @@
 <suite name="wicket-page-test-sample-spring">
 	<test verbose="2" name="tests" annotations="JDK">
 		<classes>
-			<class name="com.ttdev.wicketpagetest.sample.plain.PageCallingBackTestWithHolder"></class>
+			<class name="com.ttdev.wicketpagetest.sample.plain.PageContainingFormTest"></class>
 			<class name="com.ttdev.wicketpagetest.WebPageTestContext"></class>
 		</classes>
 	</test>

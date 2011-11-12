@@ -23,6 +23,13 @@ import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 
 /**
+ * In order to put a mock object into a field of your page, you need to make it
+ * serializable. To do that, use this factory to create a serializable proxy for
+ * your mock object (usually non-serializable).
+ * 
+ * The proxy created can be saved, but actually it will lose the target object
+ * after it is loaded. However, this is sufficient for unit testing Wicket pages
+ * as only a single page is activated and used.
  * 
  * @author Kent Tong
  * 

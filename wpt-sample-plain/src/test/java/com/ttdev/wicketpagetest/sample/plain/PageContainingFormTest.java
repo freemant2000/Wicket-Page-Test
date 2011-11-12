@@ -24,23 +24,26 @@ import com.ttdev.wicketpagetest.WebPageTestContext;
 import com.ttdev.wicketpagetest.WicketSelenium;
 
 @Test
-public class GreetingPageTest {
-	public void testDisplay() {
-		GreetingSubject gsMock = new GreetingSubject() {
+public class PageContainingFormTest {
+	public void testSubmitForm() {
+		MyService mockService = new MyService() {
 
-			public String getName() {
-				return "Peter";
+			public String getDefaultInput() {
+				return "xyz";
 			}
 
+			public String getResult(String input) {
+				return input + input;
+			}
 		};
-		// Create a serializable proxy wrapping the mock
 		SerializableProxyFactory factory = new SerializableProxyFactory();
-		GreetingSubject gsProxy = factory.createProxy(GreetingSubject.class,
-				gsMock);
+		MyService proxyService = factory.createProxy(MyService.class,
+				mockService);
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
-		// Pass the proxy to the page constructor
-		ws.openNonBookmarkablePage(GreetingPage.class, gsProxy);
-		assert ws.getText(By.id("name")).equals("Peter");
+		ws.openNonBookmarkablePage(PageContainingForm.class, proxyService);
+		assert ws.getValue(By.name("input")).equals("xyz");
+		ws.click(By.xpath("//input[@type='submit']"));
+		assert ws.getText(By.id("result")).equals("xyzxyz");
 	}
 
 }

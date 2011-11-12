@@ -87,6 +87,9 @@ public class WicketSelenium {
 				cfg.getJettyServerPort(), cfg.getWicketFilterPrefix() + "/");
 	}
 
+	/**
+	 * Open the home page of the Wicket application.
+	 */
 	public void openHomePage() {
 		selenium.get(getWicketAppBase());
 	}
@@ -153,6 +156,11 @@ public class WicketSelenium {
 		return selenium.findElement(locator);
 	}
 
+	/**
+	 * Get the underlying Selenium {@link WebDriver}.
+	 * 
+	 * @return the Selenium WebDriver
+	 */
 	public WebDriver getSelenium() {
 		return selenium;
 	}
