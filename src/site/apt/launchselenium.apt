@@ -1,0 +1,58 @@
+		------
+		Launching Selenium server automatically
+		------
+		Kent Tong
+		
+Launching Selenium server automatically
+
+  It is troublesome to ensure that the Selenium server is running before running a page test. 
+  To solve the problem, you can ask Wicket Page Test to launch the Selenium server 
+  automatically if it is not already running. To do that, create a wpt.properties in your 
+  home folder (e.g., C:\Documents and Settings\kent in XP or C:\Users\kent in Vista/Win7) 
+  with content like: 
+  
++----+
+selenium.server.jar=C:\selenium-remote-control-1.0.1\selenium-server-1.0.1\selenium-server.jar
++----+
+
+  This assumes that you have installed the Selenium RC directly into C:\. If you put
+  it into somewhere else, adjust the path above.
+  
+  Make sure java.exe is on your PATH.
+
+  Now, run the test as usual. If Selenium server is not running, it will be launched.
+
+  Note that, however, at the end, the Selenium server will NOT be shut down by default.
+  The idea is that it should stay there for any subsequent tests. However, if you're
+  running the tests, say, in a nightly build, you may probably want to shut it down
+  at the end (if it was launched by Wicket Page Test). To do that, just 
+  set an option in the configuration: 
+
++----+
+public class TestFixture {
+	@BeforeSuite
+	public void setUp() throws Exception {
+		Configuration cfg = new Configuration();
+		cfg.setKillSeleniumAtEnd(true);
+		...
+		WebPageTestContext.beforePageTests(cfg);
+	}
+
+	@AfterSuite
+	public void tearDown() throws Exception {
+		WebPageTestContext.afterPageTests();
+	}
+}
++----+
+
+* Issue in Windows
+
+  In Windows if you run the test suite in Eclipse and the Seleninum server is launched by
+  Wicket Page Test but it is not killed at the end, Eclipse will fail to detect the termination 
+  of the test process and thus the red button in the Console window will still be on. It is 
+  harmless. You can click the red button to have Eclipse kill the test process (which doesn't 
+  really exist). Or you can leave it on and there is no harm either.
+   
+  If this troubles you, you can use setKillSeleniumAtEnd() method mentioned above. Then Eclipse
+  will detect the termination properly.
+

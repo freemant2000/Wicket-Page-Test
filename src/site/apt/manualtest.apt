@@ -1,0 +1,27 @@
+		------
+		Launching your application for manual testing
+		------
+		Kent Tong
+		
+Launching your application for manual testing
+
+  The simplest way to manually test your application is to set a breakpoint in your unit
+  test and then run it in debug mode. Then you can check the application in the Selenium
+  client browser.
+
+  However, if you'd like to test run your application without any mocks or without 
+  launching Selenium, you can create a simple Main class to do that: 
+  
++----+
+public class ManualTest {
+	public static void main(String[] args) {
+		WicketAppJettyLauncher launcher = new WicketAppJettyLauncher();
+		WebAppJettyConfiguration cfg = new WebAppJettyConfiguration();
+		//Uncomment the line below if you want to change the runtime environment
+		//such as using a testing beans.xml file.
+		//cfg.setOverrideWebXml("web-test.xml"); 
+		launcher.startAppInJetty(cfg);
+	}
+}
++----+
+

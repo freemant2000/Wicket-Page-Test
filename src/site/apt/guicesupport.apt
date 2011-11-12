@@ -1,0 +1,120 @@
+		------
+		Using Guice with Wicket Page Test
+		------
+		Andy Chu
+		
+How to use
+
+  In your pom.xml, add the dependency and the repository:
+  
++----+
+<project ...>
+	...
+	<dependencies>
+		...
+		<dependency>
+			<groupId>com.ttdev</groupId>
+			<artifactId>wpt-core</artifactId>
+			<version>...</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ttdev</groupId>
+			<artifactId>wpt-runtime-guice</artifactId> 
+			<version>...</version>
+		</dependency>
+	</dependencies>
+	...
+	<repositories>
+		<repository>
+			<id>wpt-release</id>
+			<url>http://wicketpagetest.sourceforge.net/m2-repo/releases</url>
+		</repository>
+	</repositories>
+</project>
++----+
+
+  To allow injecting mock objects in place of Guice beans, you need to install
+  a special injector which wraps around your Guice injector:
+
++----+
+public class MyApp extends WebApplication {
+	...
+	@Override
+	protected void init() {
+		...
+		MockableGuiceBeanInjector.installInjector(this,
+				new GuiceComponentInjector(this, new MyModule()));
+	}
+}
++----+
+
+  The rest of all is almost the same as what you should do in using Spring, except
+  for using MockableGuiceBeanInjector for mocking. Let's implement the Page1 example
+  by using Guice again:
+
++----+
+<html>
+	<form wicket:id="form">
+		<input type="text" wicket:id="input">
+		<input type="submit" value="OK">
+	</form>
+	Result: <span wicket:id="result" id="result">abc</span>.
+</html>
+
+public class Page1 extends WebPage {
+	@Inject
+	private MyService service;
+	private String input;
+	private String result;
+
+	public Page1() {
+		input = service.getDefaultInput();
+		Form<Page1> form = new Form<Page1>("form",
+				new CompoundPropertyModel<Page1>(this)) {
+			@Override
+			protected void onSubmit() {
+				result = service.getResult(input);
+			}
+		};
+		add(form);
+		form.add(new TextField<String>("input"));
+		add(new Label("result", new PropertyModel<String>(this, "result")));
+	}
+}
+
+public interface MyService {
+	String getDefaultInput();
+	String getResult(String input);
+}
++----+
+
+  Create a TestNG test class and use MockableGuiceBeanInjector for mocking
+  
++----+
+@Test
+public class Page1Test {
+	public void testSubmitForm() {
+		MockableGuiceBeanInjector.mockBean("service", new MyService() {
+
+			public String getDefaultInput() {
+				return "xyz";
+			}
+
+			public String getResult(String input) {
+				return input + input;
+			}
+
+		});
+		DefaultSelenium selenium = WebPageTestContext.getSelenium();
+		WicketSelenium ws = new WicketSelenium(selenium);
+		ws.openBookmarkablePage(Page1.class);
+		assert selenium.getValue("input").equals("xyz");
+		selenium.click("//input[@type='submit']");
+		selenium.waitForPageToLoad("3000");
+		assert selenium.getText("result").equals("xyzxyz");
+	}
+}
++----+
+
+   Any more? That's all.

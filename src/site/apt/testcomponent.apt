@@ -1,0 +1,252 @@
+		------
+		Testing  Components
+		------
+		Andy Chu
+		
+How to unit test your own Components
+
+  It's quite possible that we need to define our own Components for further reuse.
+  No waiting for embedding it into a real Page, we should unit test it as soon as
+  possible.
+  
+  Suppose we define a Component, GreetingPanel, like: 
+  
++----+
+<wicket:panel>
+	Hello: <span wicket:id="name" >[name]</span>
+</wicket:panel>
+
+public class GreetingPanel extends Panel {
+	
+	private static final long serialVersionUID = 1L;
+	
+	@Inject
+	private GreetingService gs;
+
+	public GreetingPanel(String id) {
+		super(id);
+		add(new Label("name", gs.getName()));
+	}
+}
++----+
+
+  We are able to test this Component by simply calling ws.openComponent, please see:
+
++----+
+@Test
+public class GreetingPanelTest {
+
+	public void testOpenComponent() {
+		final StringBuffer log = new StringBuffer();
+		MockableGuiceBeanInjector.mockBean("gs", new GreetingService() {
+			public String getName() {
+				log.append("c");
+				return "Peter";
+			}
+		});
+		DefaultSelenium selenium = WebPageTestContext.getSelenium();
+		WicketSelenium ws = new WicketSelenium(selenium);
+		ws.openComponent(new ComponentFactory() {
+			public Component createComponent(String id) {
+				return new GreetingPanel(id);
+			}
+		});
+		assert selenium.getText("wicket=//name").equals("Peter");
+		assert log.toString().equals("c");
+	}
+}
++----+
+
+  By the way, you can specify how your Component is constructed in the implementation
+  of the ComponnentFactory passed to ws.openComponent too. Thus, testing stateful
+  Components is quite easy and strait forward  
+
+The first step to unit test Bread Crumbs
+
+  Suppose we have a BreadCrumbPanel only displaying an 'Hello' message:
+
++----+
+<wicket:panel>
+	<span id="info">Hello</span>
+</wicket:panel>
+
+public class SimpleBreadCrumbPanel extends BreadCrumbPanel {
+
+	private static final long serialVersionUID = 1L;
+
+	public SimpleBreadCrumbPanel(String id, IBreadCrumbModel breadCrumbModel) {
+		super(id, breadCrumbModel);
+	}
+
+	public String getTitle() {
+		return "Simple";
+	}
+}
++----+
+  
+  We can test it like a general Component but just remember to simply construct it with
+  a DefaultBreadCrumbsModel:
+  
++----+
+@Test
+public class SimpleBreadCrumbPanelTest {
+	...
+	public void testOpenBreadCrumbPanelLikeOtherComponent() {
+		DefaultSelenium selenium = WebPageTestContext.getSelenium();
+		WicketSelenium ws = new WicketSelenium(selenium);
+		ws.openComponent(new ComponentFactory() {
+			public Component createComponent(String id) {
+				return new SimpleBreadCrumbPanel(id,
+						new DefaultBreadCrumbsModel());
+			}
+		});
+		assert selenium.getText("info").equals("Hello");
+		boolean linkPresent = false;
+		// there should be no crumb link by calling openComponent
+		try {
+			selenium.getText("wicket=//crumb//link");
+			linkPresent = true;
+		} catch (Throwable e) {
+		}
+		assert !linkPresent;
+	}
+}
++----+
+
+	However, in this way, we find the corresponding crumb link will not be presented in the response.
+	If we need to test the crumb link as well, for example, testing if the
+	runtime generated text of the link is correct, we would better call ws.openBreadCrumbPanel
+	instead. Please see:
+	
++----+
+@Test
+public class SimpleBreadCrumbPanelTest {
+	...
+	public void testOpenBreadCrumbPanel() {
+		DefaultSelenium selenium = WebPageTestContext.getSelenium();
+		WicketSelenium ws = new WicketSelenium(selenium);
+		ws.openBreadCrumbPanel(new IBreadCrumbPanelFactory() {
+			
+			private static final long serialVersionUID = 1L;
+
+			public BreadCrumbPanel create(String componentId,
+					IBreadCrumbModel breadCrumbModel) {
+				return new SimpleBreadCrumbPanel(componentId, breadCrumbModel);
+			};
+		});
+		assert selenium.getText("info").equals("Hello");
+		String breadCrumbText = selenium.getText("wicket=//crumb//link");
+		assert breadCrumbText.equals("Simple");
+	}
+}
++----+	
+	
+Testing navigations between BreadCrumbPanels
+
+  Sometimes you have a BreadCrumbPanel that passes some data to the next BreadCrumbPanel,
+  e.g., this panel gets a product ID from the user and the next panel
+  lets the user edit the product data. To test the first panel, you may  
+  create the product data panel and check if it is displaying the right data.
+  But this delays the testing of the first work significantly. To test the first panel
+  immediately, you can simply check if it's getting and passing the correct
+  product ID. To do that, use an extra bean to perform bread crumb navigation:
+	
++----+
+<wicket:panel>
+	<form wicket:id="form">
+		<input type="text" wicket:id="productID">
+		<input type="submit" value="OK">
+	</form>
+</wicket:panel>
+
+public class ProductIDPanel extends BreadCrumbPanel {
+	
+	private static final long serialVersionUID = 1L;
+
+	private String productID;
+
+	@Inject
+	private BreadCrumbNavigator crumbNavigator;;
+
+	public ProductIDPanel(String id, IBreadCrumbModel breadCrumbModel) {
+		super(id, breadCrumbModel);
+		Form<ProductIDPanel> form = new Form<ProductIDPanel>("form",
+				new CompoundPropertyModel<ProductIDPanel>(this)) {
+			private static final long serialVersionUID = 1L;
+
+			protected void onSubmit() {
+				crumbNavigator.activate(ProductIDPanel.this,
+						new IBreadCrumbPanelFactory() {
+							private static final long serialVersionUID = 1L;
+
+							public BreadCrumbPanel create(String componentId,
+									IBreadCrumbModel breadCrumbModel) {
+								return new ProductDetailsPanel(componentId,
+										breadCrumbModel, productID);
+							}
+						});
+			}
+		};
+		add(form);
+		form.add(new TextField<String>("productID"));
+	}
+
+	public String getTitle() {
+		return "Product ID";
+	}
+}
++----+		 
+	
+	To check the product ID, mock the BreadCrumbNavigator in your test case:
+	
++----+
+@Test
+public class BreadCrumbNavigatorTest {
+    ...
+   public void testActiveCalledAndProvidingCorrectProductID() {
+		final StringBuffer log = new StringBuffer();
+		MockableGuiceBeanInjector.mockBean("crumbNavigator",
+				new BreadCrumbNavigator() {
+					public void removeLastParitcipant(BreadCrumbPanel from) {
+						assert false;
+					}
+
+					public void activate(BreadCrumbPanel from,
+							IBreadCrumbPanelFactory factory) {
+						log.append("a");
+						assert from instanceof ProductIDPanel;
+						ProductDetailsPanel details = (ProductDetailsPanel) factory
+								.create("id", new DefaultBreadCrumbsModel());
+						assert details.getProductID().equals("123");
+					}
+				});
+		DefaultSelenium selenium = WebPageTestContext.getSelenium();
+		WicketSelenium ws = new WicketSelenium(selenium);
+		ws.openBreadCrumbPanel(new IBreadCrumbPanelFactory() {
+			private static final long serialVersionUID = 1L;
+			public BreadCrumbPanel create(String componentId,
+					IBreadCrumbModel breadCrumbModel) {
+				return new ProductIDPanel(componentId, breadCrumbModel);
+			}
+		});
+		selenium.type("wicket=//productID", "123");
+		selenium.click("//input[@value='OK']");
+		selenium.waitForPageToLoad("3000");
+		assert log.toString().equals("a");
+	}
+}	
++----+
+
+
+  To really display the product details panel in production, you need to provide
+  a real BreadCrumbNavigator. One such class is provided: DefaultBreadCrumbNavigator.
+  Make sure you create a bean from this class. For example, in your Spring XML
+  file:
+  
++----+
+<beans>
+    ...
+	<bean class="com.ttdev.wicketpagetest.DefaultBreadCrumbNavigator">
+	</bean>
+</beans>
++----+

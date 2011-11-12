@@ -1,0 +1,41 @@
+<!--
+
+    Copyright (C) 2009 Kent Tong <freemant2000@yahoo.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    Free Software Foundation version 3.
+
+    program is distributed in the hope that it will be useful,
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<html>
+<body>
+	<table>
+		<tr wicket:id="eachRow">
+			<td>
+				<form wicket:id="f">
+					<input wicket:id="v" type="text">
+					<input wicket:id="ok" type="submit">
+				</form>
+			</td>
+		</tr>
+	</table>
+	<!-- 
+		The container is here to test if we can get the 
+		wicket id "total" from wicketpath="container_total"
+		when wicket:id is missing.
+	-->
+	<span wicket:id="container">
+		<span wicket:id="total">333</span>.
+	</span>
+	<span wicket:id="id.containing.dots"/>
+</body>
+</html>

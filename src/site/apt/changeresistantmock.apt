@@ -1,0 +1,120 @@
+		------
+		Creating change resistant mocks easily
+		------
+		Kent Tong
+
+Creating change resistant mocks easily
+
+  For example, you have a page (shown below) to load and display all the products. 
+  It uses the ProductService to do that. 
+ 
++----+
+<html>
+<body>
+	<table>
+		<tr wicket:id="eachProduct">
+			<td wicket:id="name">pen</td>
+		</tr>
+	</table>
+</body>
+</html>
+
+public class ProductListingPage extends WebPage {
+	@SpringBean
+	private ProductService productService;
+
+	public ProductListingPage() {
+		List<Product> products = productService.getAll();
+		ListView<Product> eachProduct = new ListView<Product>("eachProduct",
+				products) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void populateItem(ListItem<Product> item) {
+				item.add(new Label("name", item.getModelObject().getName()));
+			}
+		};
+		add(eachProduct);
+	}
+}
+
+public interface ProductService {
+	List<Product> getAll();
+	void add(Product p);
+	void delete(Product p);
+}
++----+
+
+  As usual, to test it, you will create a mock object for the ProductSerivce (see below). However, the ProductSerivce 
+  interface contains some unneeded methods such as add() and delete(). Those methods are of 
+  no use to this test. Normally, you have to implement such methods in your mock object nonetheless: 
+  
++----+
+@Test
+public class ProductListingPageTest {
+
+	public class MockService implements ProductService {
+		public List<Product> getAll() {
+			List<Product> products = new ArrayList<Product>();
+			products.add(new Product("ball pen"));
+			products.add(new Product("eraser"));
+			return products;
+		}
+		public void add(Product p) {
+		}
+		void delete(Product p) {
+		}
+	}
+	public void testListing() {
+		ProductService mock = new MockService();
+		MockableSpringBeanInjector.mockBean("productService", mock);
+		DefaultSelenium selenium = WebPageTestContext.getSelenium();
+		WicketSelenium ws = new WicketSelenium(selenium);
+		ws.openBookmarkablePage(ProductListingPage.class);
+		assert selenium.getText("wicket=//eachProduct[0]//name").equals(
+				"ball pen");
+		assert selenium.getText("wicket=//eachProduct[1]//name").equals(
+				"eraser");
+	}
+
+}
++----+
+
+  The problem is that, on one hand, such dummy methods are just noise in the code; on the other 
+  hand, if new methods are added to the ProductService interface or the method signatures change, 
+  the code will break.
+  
+  To solve this problem, you can use the ChangeResistantMockFactory class provided by Wicket Page
+  Test as shown below: 
+  
++----+
+@Test
+public class ProductListingPageTest {
+	private ChangeResistantMockFactory mockFactory = new ChangeResistantMockFactory(this);
+
+	public abstract class MockService implements ProductService {
+		public List<Product> getAll() {
+			List<Product> products = new ArrayList<Product>();
+			products.add(new Product("ball pen"));
+			products.add(new Product("eraser"));
+			return products;
+		}
+	}
+
+	public void testListing() {
+		ProductService mock = mockFactory
+				.implementAbstractMethods(MockService.class);
+		MockableSpringBeanInjector.mockBean("productService", mock);
+		...
+	}
+
+}
++----+
+
+  Note that your MockService class is now declared as abstract as it only
+  implements the getAll() while leaving the add() and delete() methods
+  abstract. In the test code, you use the ChangeResistantMockFactory to generate a sub-class 
+  of MockService implementing all the abstract methods in it and then create 
+  an instance of it.
+ 

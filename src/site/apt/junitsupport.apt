@@ -1,0 +1,80 @@
+		------
+		Using JUnit with Wicket Page Test
+		------
+		Kent Tong
+		
+Using JUnit with Wicket Page Test
+
+  In your pom.xml, add JUnit instead of TestNG as the dependency:
+  
++----+
+<project ...>
+	...
+	<dependencies>
+		...
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>[4.0.0,)</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
++----+
+
+  Create a test suite:
+
++----+
+...
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+import com.ttdev.wicketpagetest.WebPageTestBasicContext;
+
+@RunWith(Suite.class)
+@SuiteClasses( { BookmarkablePageTest.class })
+public class MyTestSuite {
+	@BeforeClass
+	static public void setUp() throws Exception {
+		WebPageTestBasicContext.beforePageTests();
+	}
+
+	@AfterClass
+	static public void tearDown() throws Exception {
+		WebPageTestBasicContext.afterPageTests();
+	}
+
+}
++----+
+
+  Here, it is assumed that you only have one test class (BookmarkablePageTest). Add 
+  more such test classes as needed.
+  
+  Tell Maven to run this suite only during the test phase:
+
++----+
+<project ...>
+	...
+	<dependencies>
+		...
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/MyTestSuite.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
++----+
+
+   Everything else is the same as when using TestNG.

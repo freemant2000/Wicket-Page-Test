@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+
+    Copyright (C) 2009 Kent Tong <freemant2000@yahoo.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    Free Software Foundation version 3.
+
+    program is distributed in the hope that it will be useful,
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	<display-name>myapp</display-name>
+	<filter>
+		<filter-name>f1</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>com.ttdev.centralwire.CentralWireApp</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>f1</filter-name>
+		<url-pattern>/app/*</url-pattern>
+	</filter-mapping>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:/centralwire.xml</param-value>
+	</context-param>
+</web-app>

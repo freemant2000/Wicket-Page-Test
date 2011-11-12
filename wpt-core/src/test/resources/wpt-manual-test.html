@@ -1,0 +1,86 @@
+<html>
+<head>
+<script>
+function f1() {
+	alert(WicketPageTest.findWicketElement("//id.containing.dots"));
+}
+
+if (typeof(WicketPageTest)=='undefined') {
+	WicketPageTest = {};
+}
+WicketPageTest.findWicketElement = function (path) {
+	return WicketPageTest.findWicketElementFrom(window.document, path);	
+}
+WicketPageTest.findWicketElementFrom = function (baseElement, path) {
+	var stepPattern = "(//?)([\\w\\.]+)(\\[(\\d+)\\])?";
+	while (path != "") {
+		var match = path.match(stepPattern);
+		if (match == null || match.index != 0) {
+			break;
+		}
+		var isAnyLevelDeep = match[1]=="//";
+		var wicketId = match[2];
+		var index = match[4];
+		if (index == undefined) {
+			index = 0;
+		}
+		var child = WicketPageTest.findChild(baseElement, isAnyLevelDeep, wicketId, index);
+		if (child == null) {
+			return null;
+		}
+		baseElement = child;
+		path = path.substring(match[0].length, path.length);
+	}
+	return baseElement;
+}
+WicketPageTest.findChild = function (baseElement, isAnyLevelDeep, wicketId, index) {
+	var noElementsFound = 0;
+	var queue = new Array();
+	WicketPageTest.addToQueue(queue, baseElement.childNodes);
+	while (queue.length > 0) {
+		var child = queue.shift();
+		if (child.nodeType != 1) {
+			continue;
+		}
+		if (WicketPageTest.matchesWicketId(child, wicketId)) {
+			if (noElementsFound == index) {
+				return child;
+			}
+			noElementsFound++;
+		}
+		if (isAnyLevelDeep) {
+			WicketPageTest.addToQueue(queue, child.childNodes);
+		}
+	}
+	return null;
+}
+WicketPageTest.addToQueue = function (queue, nodes) {
+	for (var i = 0; i < nodes.length; i++) {
+		queue.push(nodes[i]);
+	}
+}
+WicketPageTest.matchesWicketId = function (element, wicketId) {
+	//It must be prepared to deal with wicketpath values like ???_foo and ???_foo_0.
+	//In addition, if the wicket ID contains a dot, it must be escaped.
+	var wicketPathPattern = "^((.*[^_])_)*" + wicketId.replace(".", "\\.").replace("_", "__") + "(_\\d+)?$";
+	var attrs = element.attributes;
+	for (var j = 0; j < attrs.length; j++) {
+		var attr = attrs[j]; 
+		if (attr.nodeName == "wicket:id" &&	attr.nodeValue == wicketId) {
+			return true;
+		}
+		//wicket:id may not be there (see WICKET-2832), also try wicketpath.
+		if (attr.nodeName == "wicketpath" && attr.nodeValue.match(wicketPathPattern)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+</script>
+</head>
+<body>
+<span id="s1" wicket:id="id.containing.dots" wicketpath="id.containing.dots">xyz</span>
+<button onclick="javascript:f1()" value="OK">xxx</button>
+</body>
+</html>

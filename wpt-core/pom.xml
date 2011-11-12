@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>wicket-page-test</artifactId>
+		<groupId>com.ttdev</groupId>
+		<version>2.1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ttdev</groupId>
+	<artifactId>wpt-core</artifactId>
+	<version>${wpt.version}</version>
+	<name>wpt-core</name>
+	<dependencies>
+		<dependency>
+			<groupId>com.ttdev</groupId>
+			<artifactId>wpt-runtime</artifactId>
+			<version>${wpt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>5.13.1</version>
+			<!-- Don't force the user to use TestNG -->
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>7.1.6.v20100715</version>
+		</dependency>
+	</dependencies>
+</project>
