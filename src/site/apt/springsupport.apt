@@ -3,7 +3,7 @@
 		------
 		Kent Tong
 		
-How to use
+Using Spring with Wicket Page Test
 
   If you're using Spring beans in your Wicket pages, change the dependency from wpt-runtime
   to wpt-runtime-spring in pom.xml: 
@@ -36,7 +36,7 @@ public class MyApp extends WebApplication {
 }
 +----+
 
-  There is no way to your Wicket page; you continue to use @SpringBean to inject the
+  There is no need to change your Wicket page; you continue to use @SpringBean to inject the
   beans: 
 
 +----+

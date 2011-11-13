@@ -36,3 +36,6 @@ Upgrading from Wicket Page Test 2.x and 1.x to 3.x
 |                    											|ok.click();
 *---------------------------------------------------------------+--------------+
 
+  In addition, the PageFlowNavigator is no longer needed. See {{{./pageinteraction.html} testing page 
+  interaction}} for more info.
+  
