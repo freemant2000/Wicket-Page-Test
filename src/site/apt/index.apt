@@ -28,7 +28,8 @@ Why is it useful?
 
   * The key benefit is that you can control the right thing (user input on the web page and the data your pages
   get, from the services),
-  and then observe the right thing (HTML DOM elements, possible manipulated by Javascript/AJAX).
+  and then observe the right thing (HTML DOM elements, possible manipulated by Javascript/AJAX,
+  which is far better than inspecting the internal data structure in your program). 
   
   * Your real application is run. You don't need to modify it in anyway.
 
