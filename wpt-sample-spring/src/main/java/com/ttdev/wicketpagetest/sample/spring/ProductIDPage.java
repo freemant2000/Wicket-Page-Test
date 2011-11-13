@@ -20,25 +20,19 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-
-import com.ttdev.wicketpagetest.PageFlowNavigator;
 
 public class ProductIDPage extends WebPage {
 	private static final long serialVersionUID = 1L;
 	private String productID;
-	@SpringBean
-	private PageFlowNavigator navigator;
 
 	public ProductIDPage() {
-		Form<ProductIDPage> form = new Form<ProductIDPage>(
-				"form",
+		Form<ProductIDPage> form = new Form<ProductIDPage>("form",
 				new CompoundPropertyModel<ProductIDPage>(this)) {
 			private static final long serialVersionUID = 1L;
 
 			protected void onSubmit() {
 				ProductDetailsPage r = new ProductDetailsPage(productID);
-				navigator.setResponsePage(this, r);
+				setResponsePage(r);
 			}
 		};
 		add(form);

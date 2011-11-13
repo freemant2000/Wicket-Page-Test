@@ -37,10 +37,10 @@ Locating HTML elements
 @Test
 public class PageExtractedByWicketIdsTest {
 	public void testWicketLocator() {
-		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		DefaultSelenium selenium = WebPageTestContext.getSelenium();
+		WicketSelenium ws = new WicketSelenium(selenium);
 		ws.openBookmarkablePage(...);
-		...
-		assert ws.getText(new ByWicketIdPath("//total")).equals("0");
+		assert selenium.getText("wicket=//total").equals("0");
 	}
 
 }
@@ -60,19 +60,17 @@ public class PageExtractedByWicketIdsTest {
 @Test
 public class PageExtractedByWicketIdsTest {
 	public void testWicketLocator() {
-		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		DefaultSelenium selenium = WebPageTestContext.getSelenium();
+		WicketSelenium ws = new WicketSelenium(selenium);
 		ws.openBookmarkablePage(...);
-		assert ws.getValue(new ByWicketIdPath("//eachRow[0]//v")).equals("3");
-		assert ws.getValue(new ByWicketIdPath("//eachRow[1]//v")).equals("2");
-		assert ws.getValue(new ByWicketIdPath("//eachRow[2]//v")).equals("8");
-		assert ws.getText(new ByWicketIdPath("//total")).equals("13");
-		WebElement v1 = ws.findWicketElement("//eachRow[1]//v");
-		v1.clear();  // clear the existing value first
-		v1.sendKeys("5"); // input "5"
-		WebElement ok = ws.findWicketElement("//eachRow[1]//ok");
-		ok.click();
+		assert selenium.getValue("wicket=//eachRow[0]//v").equals("3");
+		assert selenium.getValue("wicket=//eachRow[1]//v").equals("2");
+		assert selenium.getValue("wicket=//eachRow[2]//v").equals("8");
+		assert selenium.getText("wicket=//total").equals("13");
+		selenium.type("wicket=//eachRow[1]//v", "5");
+		selenium.click("wicket=//eachRow[1]//ok");
 		ws.waitUntilAjaxDone();
-		assert ws.getText(new ByWicketIdPath("//total")).equals("16");
+		assert selenium.getText("wicket=//total").equals("16");
 	}
 
 }

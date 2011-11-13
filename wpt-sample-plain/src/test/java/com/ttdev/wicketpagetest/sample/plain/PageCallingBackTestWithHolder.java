@@ -30,6 +30,7 @@ import com.ttdev.wicketpagetest.WicketSelenium;
 public class PageCallingBackTestWithHolder {
 	private String input;
 
+	// need to subclass it to provide the callback
 	public static class MyPageCallingBack extends PageCallingBack {
 
 		private static final long serialVersionUID = 1L;
@@ -42,18 +43,21 @@ public class PageCallingBackTestWithHolder {
 		protected void onInputAvailable(String input) {
 			// You have to call get() to get the test case instance, but
 			// then you can access its fields directly because that instance
-			// is the real thing, but a proxy.
+			// is the real thing, not a proxy.
 			test.get().input = input;
 		}
 
 	}
 
 	public void testCallBack() {
+		// make a serialzable holder (a simple container) to refer to the
+		// test case instance and inject it into the "test" field
 		MockableBeanInjector.mockBean("test", SimpleHolder.make(this));
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(MyPageCallingBack.class);
 		ws.sendKeys(By.name("input"), "abc");
 		ws.click(By.xpath("//input[@type='submit']"));
+		// check if the correct data was passed to the callback
 		assert input.equals("abc");
 	}
 }

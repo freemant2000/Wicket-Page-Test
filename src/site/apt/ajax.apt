@@ -1,0 +1,76 @@
+		------
+		Testing AJAX with Wicket Page Test
+		------
+		Kent Tong
+
+Testing AJAX
+
+  For example, the page below contains an AJAX link that will update the current number
+  in the page (this example page uses a Spring bean, but it works the same way with a plain Java
+  interface):
+  
++----+
+<html>
+<body>
+	<a wicket:id="calcNext">Calculate next</a>
+	<span id="output">Current: <span wicket:id="current">0</span></span>.
+</body>	
+</html>
+
+public interface CalcService {
+	int calcNext(int current);
+}
+
+public class AjaxPage extends WebPage {
+	@SpringBean
+	private CalcService service;
+	private int current = 0;
+	private Label currentLabel;
+
+	public AjaxPage() {
+		AjaxLink<Void> calcNext = new AjaxLink<Void>("calcNext") {
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				current = service.calcNext(current);
+				target.add(currentLabel);
+			}
+		};
+		add(calcNext);
+		currentLabel = new Label("current", new PropertyModel<Integer>(this,
+				"current"));
+		add(currentLabel);
+		currentLabel.setOutputMarkupId(true);
+	}
+}
++----+
+
+  To test it, as usual, you will mock the service. Here, you just increment the number. To test 
+  the AJAX effect, you wait until the AJAX processing is completed and then check
+  the result:
+
++----+
+@Test
+public class AjaxPageTest {
+	public void testEasyWaitingForAjax() {
+		MockableSpringBeanInjector.mockBean("service", new CalcService() {
+
+			public int calcNext(int current) {
+				return current + 1;
+			}
+		});
+		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		ws.openBookmarkablePage(AjaxPage.class);
+		WebElement output = ws.findElement(By.id("output"));
+		assert output.getText().equals("Current: 0");
+		ws.findElement(By.linkText("Calculate next")).click(); // ajax call
+		ws.waitUntilAjaxDone(); // this is the key step
+		assert output.getText().equals("Current: 1");
+		ws.findElement(By.linkText("Calculate next")).click(); // ajax call
+		ws.waitUntilAjaxDone(); // this is the key step
+		assert output.getText().equals("Current: 2");
+	}
+
+}
++----+
+

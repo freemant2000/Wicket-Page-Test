@@ -1,0 +1,79 @@
+		------
+		Ways to invoke different pages with Wicket Page Test
+		------
+		Kent Tong
+
+Bookmarkable pages
+
+  If your Wicket page takes no argument:
+  
++----+
+<html>
+Hello: <span wicket:id="name" id="name">John</span>.
+</html>
+
+public class BookmarkablePage extends WebPage {
+	@SpringBean
+	private GreetingService gs;
+
+	public BookmarkablePage() {
+		add(new Label("name", gs.getName()));
+	}
+
+}
++----+
+
+  It is very easy to display it for testing:
+
++----+
+@Test
+public class BookmarkablePageTest {
+	public void testDisplay() {
+		MockableSpringBeanInjector.mockBean("gs", new GreetingService() {
+
+			public String getName() {
+				return "Peter";
+			}
+
+		});
+		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		ws.openBookmarkablePage(BookmarkablePage.class);
+		assert ws.getText(By.id("name")).equals("Peter");
+	}
+
+}
++----+ 
+
+Non-bookmarkable pages (constructor taking arguments)
+
+  Sometimes your Wicket page may take arguments. For example, a page that takes
+  and displays some calculation result, or a listing page that takes a search condition.
+  Let's say the page is like:
+
++----+
+<html>
+Hello: <span wicket:id="name" id="name">John</span>.
+</html>
+
+public class NonBookmarkablePage extends WebPage {
+	public NonBookmarkablePage(SomeObj obj) {
+		add(new Label("name", obj.getName()));
+	}
+}
++----+
+
+  To invoke it in your test case, just specify the page class and the
+  argument values:
+
++----+
+@Test
+public class NonBookmarkablePageTest {
+	public void testDisplay() {
+		DefaultSelenium selenium = WebPageTestContext.getSelenium();
+		WicketSelenium ws = new WicketSelenium(selenium);
+		SomeObj obj = new SomeObj("xyz");
+		ws.openNonBookmarkablePage(NonBookmarkablePage.class, obj);
+		assert selenium.getText("name").equals("xyz");
+	}
+}
++----+

@@ -1,0 +1,91 @@
+		------
+		Using Spring with Wicket Page Test
+		------
+		Kent Tong
+		
+How to use
+
+  If you're using Spring beans in your Wicket pages, change the dependency from wpt-runtime
+  to wpt-runtime-spring in pom.xml: 
+  
++----+
+<project ...>
+	...
+	<dependencies>
+		...
+		<dependency>
+			<groupId>com.ttdev</groupId>
+			<artifactId>wpt-runtime-spring</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+	</dependencies>
+</project>
++----+
+
+  In your application class, use an injector that will inject mocks first and if not
+  found, try the Spring beans:
+
++----+
+public class MyApp extends WebApplication {
+
+	@Override
+	protected void init() {
+		MockableSpringBeanInjector.installInjector(this); 
+	}
+	
+}
++----+
+
+  There is no way to your Wicket page; you continue to use @SpringBean to inject the
+  beans: 
+
++----+
+public class PageContainingForm extends WebPage {
+	@SpringBean
+	private MyService service;
+	private String input;
+	private String result;
+
+	public PageContainingForm() {
+		input = service.getDefaultInput();
+		Form<PageContainingForm> form = new Form<PageContainingForm>("form",
+				new CompoundPropertyModel<PageContainingForm>(this)) {
+
+			@Override
+			protected void onSubmit() {
+				result = service.getResult(input);
+			}
+		};
+		add(form);
+		form.add(new TextField<String>("input"));
+		add(new Label("result", new PropertyModel<String>(this, "result")));
+	}
+}
++----+
+
+  In the test, you provide the mock as a bean to be injected instead of passing
+  it as a constructor argument:
+
++----+
+@Test
+public class PageContainingFormTest {
+	public void testSubmitForm() {
+		MockableSpringBeanInjector.mockBean("service", new MyService() {
+
+			public String getDefaultInput() {
+				return "xyz";
+			}
+
+			public String getResult(String input) {
+				return input + input;
+			}
+
+		});
+		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		ws.openBookmarkablePage(PageContainingForm.class);
+		assert ws.getValue(By.name("input")).equals("xyz");
+		ws.click(By.xpath("//input[@type='submit']"));
+		assert ws.getText(By.id("result")).equals("xyzxyz");
+	}
+}
++----+

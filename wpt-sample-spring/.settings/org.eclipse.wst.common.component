@@ -5,10 +5,10 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
-        <dependent-module archiveName="wpt-runtime-2.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime/wpt-runtime">
+        <dependent-module archiveName="wpt-runtime-3.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime/wpt-runtime">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wpt-runtime-spring-2.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime-spring/wpt-runtime-spring">
+        <dependent-module archiveName="wpt-runtime-spring-3.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime-spring/wpt-runtime-spring">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="wpt-sample-spring"/>

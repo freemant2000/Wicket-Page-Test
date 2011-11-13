@@ -3,10 +3,9 @@
 	<parent>
 		<artifactId>wicket-page-test</artifactId>
 		<groupId>com.ttdev</groupId>
-		<version>2.1.0-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.ttdev</groupId>
 	<artifactId>wpt-core</artifactId>
 	<version>${wpt.version}</version>
 	<name>wpt-core</name>

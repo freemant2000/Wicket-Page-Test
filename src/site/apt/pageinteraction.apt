@@ -1,0 +1,201 @@
+		------
+		Testing interaction between Wicket pages with Wicket Page Test
+		------
+		Kent Tong
+
+Checking if a Wicket page is passing the correct data to the next page
+
+  Sometimes you have a Wicket page that passes some data to the next page,
+  e.g., this page gets a product ID from the user and the next page
+  lets the user edit the product data:
+
++----+
+<html>
+	<form wicket:id="form">
+		<input type="text" wicket:id="productID">
+		<input type="submit" value="OK">
+	</form>
+</html>
+
+public class ProductIDPage extends WebPage {
+	private String productID;
+
+	public ProductIDPage() {
+		Form<ProductIDPage> form = new Form<ProductIDPage>("form",
+				new CompoundPropertyModel<ProductIDPage>(this)) {
+
+			protected void onSubmit() {
+				ProductDetailsPage r = new ProductDetailsPage(productID);
+				setResponsePage(r);
+			}
+		};
+		add(form);
+		form.add(new TextField<String>("productID"));
+	}
+
+}
++----+
+
+  To test this page, it seems that you may have to create the product details page and 
+  check if it is displaying the right data. But this delays the testing of the first 
+  page significantly. To test it immediately, you can simply check if it's getting and 
+  passing the correct product ID. To do that, use a listener to catch the response
+  page:
+
++----+
+@Test
+public class ProductIDPageTest {
+
+	private CatchResponsePageListener listener;
+
+	@BeforeMethod
+	public void catchResponsePage() {
+		MyApp app = (MyApp) WebPageTestContext.getWebApplication();
+		// key step: this listener will try to catch a response page
+		// belonging to the ProductDetailsPage class. It will catch it
+		// then schedule a dummy page (basically empty).
+		listener = new CatchResponsePageListener(ProductDetailsPage.class);
+		app.getRequestCycleListeners().add(listener);
+	}
+
+	@AfterMethod
+	public void stopCatchingResponsePage() {
+		MyApp app = (MyApp) WebPageTestContext.getWebApplication();
+		app.getRequestCycleListeners().remove(listener);
+	}
+
+	public void testProvidingCorrectProductID() {
+		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		ws.openBookmarkablePage(ProductIDPage.class);
+		ws.findElement(By.name("productID")).sendKeys("p123");
+		ws.click(By.xpath("//input[@type='submit']"));
+		// check the page caught
+		ProductDetailsPage p = (ProductDetailsPage) listener.getPageCaught();
+		assert p.getProductID().equals("p123");
+	}
+}
+
++----+
+
+Testing a page that calls back
+
+  For example, you may have a page that lets the user choose a product. However, what to do
+  when a product is selected? It is entirely up to the caller to decide. The caller may
+  add the product to a shopping cart, display details of that product, or delete it. So,
+  the page simply calls a callback method to let the caller to handle: 
+  
++----+
+public abstract class PageCallingBack extends WebPage {
+	private static final long serialVersionUID = 1L;
+	private String input;
+
+	public PageCallingBack() {
+		Form<PageCallingBack> form = new Form<PageCallingBack>("form",
+				new CompoundPropertyModel<PageCallingBack>(this)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit() {
+				onInputAvailable(input);
+			}
+		};
+		add(form);
+		form.add(new TextField<String>("input"));
+	}
+
+	abstract protected void onInputAvailable(String result);
+}
+
+<html>
+	<form wicket:id="form">
+		<input type="text" wicket:id="input">
+		<input type="submit" value="OK">
+	</form>
+</html>
++----+
+
+  How to test if it is passing the correct data to the callback? You can do it like this:
+  
++----+
+@Test
+public class PageCallingBackTestWithHolder {
+	private String input;
+
+	// need to subclass it to provide the callback
+	public static class MyPageCallingBack extends PageCallingBack {
+
+		// inject a holder containing the test case instance
+		@Mock
+		private Holder<PageCallingBackTestWithHolder> test;
+
+		@Override
+		protected void onInputAvailable(String input) {
+			// You have to call get() to get the test case instance, but
+			// then you can access its fields directly because that instance
+			// is the real thing, not a proxy.
+			test.get().input = input;
+		}
+
+	}
+
+	public void testCallBack() {
+		// make a serialzable holder (a simple container) to refer to the
+		// test case instance and inject it into the "test" field
+		MockableBeanInjector.mockBean("test", SimpleHolder.make(this));
+		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		ws.openBookmarkablePage(MyPageCallingBack.class);
+		ws.sendKeys(By.name("input"), "abc");
+		ws.click(By.xpath("//input[@type='submit']"));
+		// check if the correct data was passed to the callback
+		assert input.equals("abc");
+	}
+}
++----+
+
+  If you don't want to use a holder to pass the test case instance into the
+  page subclass, you can pass a serializable proxy around the test case
+  instance directly, but then you should only call the methods on it but
+  no access its fields: 
+  
++----+
+// Must NOT mark the class as @Test, otherwise it will treat
+// the setter as test methods!
+public class PageCallingBackTestWithMethodCalls {
+	private String input;
+
+	public void setInput(String input) {
+		this.input = input;
+	}
+
+	public static class MyPageCallingBack extends PageCallingBack {
+
+		private static final long serialVersionUID = 1L;
+
+		// get access to the test case instance
+		@Mock
+		private PageCallingBackTestWithMethodCalls test;
+
+		@Override
+		protected void onInputAvailable(String input) {
+			// It is very important that you access the test object through
+			// its methods instead of direct field access! This is because
+			// the proxy is a CGLIB proxy (which is required to proxy a class
+			// instead of an interface) and thus can forward method access only
+			// to the target object. You can indeed access the fields in proxy,
+			// but they aren't the same fields in the target.
+			test.setInput(input);
+		}
+
+	}
+
+	@Test
+	public void testCallBack() {
+		MockableBeanInjector.mockBean("test", this);
+		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		ws.openBookmarkablePage(MyPageCallingBack.class);
+		ws.sendKeys(By.name("input"), "abc");
+		ws.click(By.xpath("//input[@type='submit']"));
+		assert input.equals("abc");
+	}
+}
++----+

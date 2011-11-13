@@ -38,7 +38,7 @@ public class PageContainingFormTest {
 
 		});
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
-		ws.openHomePage();
+		ws.openBookmarkablePage(PageContainingForm.class);
 		assert ws.getValue(By.name("input")).equals("xyz");
 		ws.click(By.xpath("//input[@type='submit']"));
 		assert ws.getText(By.id("result")).equals("xyzxyz");

@@ -10,6 +10,8 @@ import org.apache.wicket.Page;
  * data. For production, you should probably use the
  * {@link DefaultPageFlowNavigator} as the implementation.
  * 
+ * @deprecated Please use CatchResponsePageListener instead.
+ * 
  * @author Kent Tong
  * 
  */

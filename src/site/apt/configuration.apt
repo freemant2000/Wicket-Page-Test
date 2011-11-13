@@ -1,0 +1,84 @@
+		------
+		Changing your application's configuration for testing
+		------
+		Kent Tong
+
+Changing your application's configuration for testing
+
+  Your application may uses Spring beans to, say, access an LDAP server. But when unit testing
+  your pages, it is not needed and should be disabled. To do that, you can provide an additional
+  Spring context XML file to override those beans. So, create an context-test.xml file in
+  the root of the classpath:
+  
++----+
+<beans ...>
+	<!-- Disable the LDAP by making it a simple String -->
+	<bean id="ldapServer" class="java.lang.String"/>
+	...
+</beans>
++----+
+   
+  How to tell Spring to load this context-test.xml file in addition to the normal context.xml 
+  file? In principle, you need to contextConfigLocation parameter in web.xml:
+
++----+
+<web-app ...>
+	...
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:/context.xml classpath:/context-test.xml</param-value>
+	</context-param>
+</web-app>
++----+
+  
+  However, you definitely shouldn't modify web.xml as it is to be used in production. 
+  The idea is to create an overriding web.xml file. So, create a web-test.xml file in 
+  src/test/resources: 
+  
++----+
+<web-app ...>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:/context.xml classpath:/context-test.xml</param-value>
+	</context-param>
+</web-app>
++----+
+
+  To tell Jetty to apply this overriding web.xml file (web-test.xml) when launching
+  your web application, create a class to wrap around the WebPageTestContext class.
+  This class will specify the overriding web.xml file:
+
++----+
+public class TestFixture {
+	@BeforeSuite
+	public void setUp() throws Exception {
+		// configuration for wpt
+		Configuration cfg = new Configuration();
+		// tell wpt to provide an overriding web.xml to Jetty
+		cfg.setOverrideWebXml("web-test.xml");
+		// go ahead to launch Jetty and Selenium
+		WebPageTestContext.beforePageTests(cfg); 
+	}
+	@AfterSuite
+	public void tearDown() throws Exception {
+		// shutdown Jetty and Selenium
+		WebPageTestContext.afterPageTests();
+	}
+}
++----+
+
+  In the testng.xml file, run this TestFixture instead of the WebPageTestContext:
+
++----+
+<suite name="wicket-page-test-sample">
+	<test verbose="2" name="tests" annotations="JDK">
+		<packages>
+			<package name="..."></package>
+		</packages>
+		<classes>
+			<class name="com.foo.TextFixture"></class>
+		</classes>
+	</test>
+</suite>
++----+
+

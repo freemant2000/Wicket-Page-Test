@@ -1,39 +1,38 @@
 		------
-		Upgrading from Wicket 1.4.x to Wicket 1.5.x
+		Upgrading from Wicket Page Test 2.x and 1.x to 3.x
 		------
 		Kent Tong
 		
-Upgrading from Wicket 1.4.x to Wicket 1.5.x
+Upgrading from Wicket Page Test 2.x and 1.x to 3.x
 
-  To work with Wicket 1.5.x, use Wicket Page Test 2.x or later. Typically that's all
-  you need.
+  Note that Wicket Page Test 3.x uses Wicket 1.5.x. If you're using Wicket 1.4,
+  please use Wicket Page Test 1.x instead.
   
-  If you use the Guice support, now you MUST change the code from:
-
-+----+
-public class MyApp extends WebApplication {
-	...
-	@Override
-	protected void init() {
-		...
-		addComponentInstantiationListener(new GuiceComponentInjector(this, 
-				new MyModule()));
-		MockableGuiceBeanInjector.installInjector(this);
-	}
-}
-+----+
-
-  to:
-
-+----+
-public class MyApp extends WebApplication {
-	...
-	@Override
-	protected void init() {
-		...
-		MockableGuiceBeanInjector.installInjector(this,
-				new GuiceComponentInjector(this, new MyModule()));
-	}
-}
-+----+
+  The major changes are caused by the change from Selenium 1.0 API to the Selenium 2.0 
+  WebDriver API. Below are some examples:  
+  
+*---------------------------------------------------------------+--------------+
+|DefaultSelenium selenium = WebPageTestContext.getSelenium();\  |WicketSelenium ws = WebPageTestContext.getWicketSelenium();\
+|WicketSelenium ws = new WicketSelenium(selenium);       	    |WebDriver selenium = ws.getSelenium();
+*---------------------------------------------------------------+--------------+
+|ws.openBookmarkablePage(PageContainingForm.class);             |ws.openBookmarkablePage(PageContainingForm.class);
+*---------------------------------------------------------------+--------------+
+|assert selenium.getValue("input").equals("xyz");               |assert ws.getValue(By.name("input")).equals("xyz");
+*---------------------------------------------------------------+--------------+
+|selenium.click("//input[@type='submit']");\                    |ws.click(By.xpath("//input[@type='submit']"));
+|selenium.waitForPageToLoad("3000");                            |
+*---------------------------------------------------------------+--------------+
+|assert selenium.getText("result").equals("xyzxyz");            |assert ws.getText(By.id("result")).equals("xyzxyz");
+*---------------------------------------------------------------+--------------+
+|assert selenium.getValue("wicket=//eachRow[0]//v").equals("3");|assert ws.getValue(new ByWicketIdPath("//eachRow[0]//v")).equals("3");
+*---------------------------------------------------------------+--------------+
+|assert selenium.getText("wicket=//total").equals("13");        |assert ws.getText(new ByWicketIdPath("//total")).equals("13");
+*---------------------------------------------------------------+--------------+
+|selenium.type("wicket=//eachRow[1]//v", "5");                  |WebElement v1 = ws.findWicketElement("//eachRow[1]//v");\
+|                    											|v1.clear();\
+|                    											|v1.sendKeys("5");
+*---------------------------------------------------------------+--------------+
+|selenium.click("wicket=//eachRow[1]//ok");                     |WebElement ok = ws.findWicketElement("//eachRow[1]//ok");\
+|                    											|ok.click();
+*---------------------------------------------------------------+--------------+
 

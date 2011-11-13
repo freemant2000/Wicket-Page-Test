@@ -16,37 +16,43 @@
 
 package com.ttdev.wicketpagetest.sample.spring;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.ttdev.wicketpagetest.MockableSpringBeanInjector;
-import com.ttdev.wicketpagetest.PageFlowNavigator;
+import com.ttdev.wicketpagetest.CatchResponsePageListener;
 import com.ttdev.wicketpagetest.WebPageTestContext;
 import com.ttdev.wicketpagetest.WicketSelenium;
 
 @Test
 public class ProductIDPageTest {
-	private String log;
+
+	private CatchResponsePageListener listener;
+
+	@BeforeMethod
+	public void catchResponsePage() {
+		MyApp app = (MyApp) WebPageTestContext.getWebApplication();
+		// key step: this listener will try to catch a response page
+		// belonging to the ProductDetailsPage class. It will catch it
+		// then schedule a dummy page (basically empty).
+		listener = new CatchResponsePageListener(ProductDetailsPage.class);
+		app.getRequestCycleListeners().add(listener);
+	}
+
+	@AfterMethod
+	public void stopCatchingResponsePage() {
+		MyApp app = (MyApp) WebPageTestContext.getWebApplication();
+		app.getRequestCycleListeners().remove(listener);
+	}
 
 	public void testProvidingCorrectProductID() {
-		MockableSpringBeanInjector.mockBean("navigator",
-				new PageFlowNavigator() {
-
-					public void setResponsePage(Component from, Page to) {
-						ProductDetailsPage r = (ProductDetailsPage) to;
-						log = r.getProductID();
-						// don't really display the next page which you probably
-						// haven't worked on yet. Just redisplay the current
-						// page.
-					}
-				});
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(ProductIDPage.class);
 		ws.findElement(By.name("productID")).sendKeys("p123");
 		ws.click(By.xpath("//input[@type='submit']"));
-		assert log.equals("p123");
+		// check the page caught
+		ProductDetailsPage p = (ProductDetailsPage) listener.getPageCaught();
+		assert p.getProductID().equals("p123");
 	}
 }

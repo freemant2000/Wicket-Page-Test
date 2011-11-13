@@ -1,0 +1,48 @@
+		------
+		Using HtmlUnit (headless, simulated browser) with Wicket Page Test
+		------
+		Kent Tong
+		
+Using HtmlUnit (headless, simulated browser) with Wicket Page Test
+
+  If you're concerned that launching a browser would be too slow, you can use the HtmlUnit
+  web driver instead of the Firefox web driver. To do that, create a class to wrap around 
+  the WebPageTestContext class. This class will specify the web driver instance to use:
+
++----+
+public class TestFixture {
+	@BeforeSuite
+	public void setUp() throws Exception {
+		// configuration for wpt
+		Configuration cfg = new Configuration(); 
+		// create HtmlUnit driver. true means enable Javascript
+		HtmlUnitDriver selenium = new HtmlUnitDriver(true);
+		// use this web driver instance 
+		cfg.setSelenium(selenium); 
+		// go ahead to launch Jetty and Selenium
+		WebPageTestContext.beforePageTests(cfg); 
+	}
+
+	@AfterSuite
+	public void tearDown() throws Exception {
+		// shutdown Jetty and Selenium
+		WebPageTestContext.afterPageTests();
+	}
+
+}
++----+
+
+  In the testng.xml file, run this TestFixture instead of the WebPageTestContext:
+
++----+
+<suite name="wicket-page-test-sample">
+	<test verbose="2" name="tests" annotations="JDK">
+		<packages>
+			<package name="..."></package>
+		</packages>
+		<classes>
+			<class name="com.foo.TextFixture"></class>
+		</classes>
+	</test>
+</suite>
++----+

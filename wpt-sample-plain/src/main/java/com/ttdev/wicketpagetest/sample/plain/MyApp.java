@@ -30,8 +30,7 @@ public class MyApp extends WebApplication {
 
 	@Override
 	protected void init() {
-		MockableBeanInjector injector = new MockableBeanInjector();
-		MockableBeanInjector.installInjector(this, injector);
+		MockableBeanInjector.installInjector(this, new MockableBeanInjector());
 	}
 
 }

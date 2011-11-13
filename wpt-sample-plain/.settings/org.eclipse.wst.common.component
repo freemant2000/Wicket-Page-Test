@@ -5,7 +5,7 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="wpt-runtime-2.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime/wpt-runtime">
+        <dependent-module archiveName="wpt-runtime-3.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime/wpt-runtime">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="wpt-sample-plain"/>

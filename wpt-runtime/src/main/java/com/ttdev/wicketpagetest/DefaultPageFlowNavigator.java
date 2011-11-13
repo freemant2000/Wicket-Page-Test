@@ -9,6 +9,8 @@ import org.apache.wicket.Page;
  * injected bean, you need to define such a Spring/Guice bean for your
  * application if you do use it.
  * 
+ * @deprecated Please use CatchResponsePageListener instead.
+ * 
  * @author Kent Tong
  * 
  */
