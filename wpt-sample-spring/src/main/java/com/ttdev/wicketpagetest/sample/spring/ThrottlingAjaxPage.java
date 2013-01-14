@@ -44,7 +44,6 @@ public class ThrottlingAjaxPage extends WebPage {
 				target.add(outputLabel);
 			}
 		};
-		onkeyupBehavior.setThrottleDelay(Duration.milliseconds(500L));
 		inputField.add(onkeyupBehavior);
 		outputLabel = new Label("output", new AbstractReadOnlyModel<Integer>() {
 

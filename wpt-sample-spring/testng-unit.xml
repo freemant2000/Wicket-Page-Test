@@ -16,8 +16,8 @@
 <suite name="wicket-page-test-sample-spring">
 	<test verbose="2" name="tests" annotations="JDK">
 		<classes>
-			<class name="com.ttdev.wicketpagetest.sample.spring.ProductIDPageTest"></class>
-			<class name="com.ttdev.wicketpagetest.sample.spring.TestFixture"></class>
+		    <class name="com.ttdev.wicketpagetest.sample.spring.TestFixture"></class>
+			<class name="com.ttdev.wicketpagetest.sample.spring.MouseMovementTest"></class>
 		</classes>
 	</test>
 </suite>

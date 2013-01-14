@@ -20,6 +20,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
 public class NonBookmarkablePage extends WebPage {
+	private static final long serialVersionUID = 1L;
+
 	public NonBookmarkablePage(SomeObj obj) {
 		add(new Label("name", obj.getName()));
 	}

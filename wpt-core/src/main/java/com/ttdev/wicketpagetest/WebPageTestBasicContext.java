@@ -50,7 +50,7 @@ public class WebPageTestBasicContext {
 	private static WebPageTestBasicContext instance;
 
 	private WebDriver selenium;
-	private WicketSelenium wicketSelenium;
+	private WicketSeleniumDriver wicketSelenium;
 	private WicketAppJettyLauncher jettyLauncher;
 	private Configuration cfg;
 
@@ -67,7 +67,7 @@ public class WebPageTestBasicContext {
 		return instance.cfg;
 	}
 
-	public static WicketSelenium getWicketSelenium() {
+	public static WicketSeleniumDriver getWicketSelenium() {
 		return instance.wicketSelenium;
 	}
 
@@ -84,7 +84,7 @@ public class WebPageTestBasicContext {
 
 	private void startSelenium() {
 		selenium = cfg.getSelenium();
-		wicketSelenium = new WicketSelenium(cfg, selenium);
+		wicketSelenium = new WicketSeleniumDriver(cfg, selenium);
 	}
 
 	public static void afterPageTests() throws Exception {

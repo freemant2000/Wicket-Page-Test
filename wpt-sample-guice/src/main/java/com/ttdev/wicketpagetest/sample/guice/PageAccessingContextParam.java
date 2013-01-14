@@ -22,6 +22,8 @@ import org.apache.wicket.protocol.http.WebApplication;
 
 public class PageAccessingContextParam extends WebPage {
 
+	private static final long serialVersionUID = 1L;
+
 	public PageAccessingContextParam() {
 		String p1 = WebApplication.get().getServletContext().getInitParameter("p1");
 		add(new Label("p1", p1));

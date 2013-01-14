@@ -2,6 +2,8 @@ package com.ttdev.wicketpagetest.sample.guice;
 
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 public class SimpleBreadCrumbPanel extends BreadCrumbPanel {
 
@@ -11,7 +13,7 @@ public class SimpleBreadCrumbPanel extends BreadCrumbPanel {
 		super(id, breadCrumbModel);
 	}
 
-	public String getTitle() {
-		return "Simple";
+	public IModel<String> getTitle() {
+		return new Model<String>("Simple");
 	}
 }

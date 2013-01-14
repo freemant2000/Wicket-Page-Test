@@ -26,6 +26,7 @@ import org.apache.wicket.model.PropertyModel;
 import com.google.inject.Inject;
 
 public class PageContainingForm extends WebPage {
+	private static final long serialVersionUID = 1L;
 	@Inject
 	private MyService service;
 	private String input;

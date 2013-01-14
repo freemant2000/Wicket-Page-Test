@@ -23,6 +23,8 @@ import org.apache.wicket.protocol.http.WebSession;
 
 public class PageRequiringLogin extends WebPage {
 
+	private static final long serialVersionUID = 1L;
+
 	public PageRequiringLogin() {
 		MySession session = (MySession) WebSession.get();
 		String currentUser = session.getCurrentUser();

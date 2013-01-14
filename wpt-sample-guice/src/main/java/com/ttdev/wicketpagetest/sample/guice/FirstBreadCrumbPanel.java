@@ -4,6 +4,8 @@ import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanelFactory;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import com.google.inject.Inject;
 import com.ttdev.wicketpagetest.BreadCrumbNavigator;
@@ -16,7 +18,7 @@ public class FirstBreadCrumbPanel extends BreadCrumbPanel {
 
 	public FirstBreadCrumbPanel(String id, IBreadCrumbModel breadCrumbModel) {
 		super(id, breadCrumbModel);
-		add(new Link("next") {
+		add(new Link<Void>("next") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -27,7 +29,7 @@ public class FirstBreadCrumbPanel extends BreadCrumbPanel {
 										SimpleBreadCrumbPanel.class));
 			}
 		});
-		add(new Link("replace") {
+		add(new Link<Void>("replace") {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void onClick() {
@@ -41,7 +43,7 @@ public class FirstBreadCrumbPanel extends BreadCrumbPanel {
 	
 	}
 
-	public String getTitle() {
-		return "first";
+	public IModel<String> getTitle() {
+		return new Model<String>("first");
 	}
 }
