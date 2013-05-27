@@ -1,5 +1,3 @@
 This lightweight library allows you to unit test Wicket pages easily: It launches Jetty to run 
 your webapp in-process and launches the Selenium 2.0 webdriver. Then you inject POJO mock objects 
-into your page and use the webdriver to drive it. 
-
-My Test from Mac.
+into your page and use the webdriver to drive it.
