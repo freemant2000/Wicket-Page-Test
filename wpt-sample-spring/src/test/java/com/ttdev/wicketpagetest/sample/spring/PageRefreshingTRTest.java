@@ -27,6 +27,7 @@ public class PageRefreshingTRTest {
 	public void testWicketLocatorOnRefreshedTR() {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(PageRefreshingTR.class);
+		ws.subscribeAjaxDoneHandler();
 		assert ws.getText(new ByWicketIdPath("//eachRow[0]//count")).equals("0");
 		assert ws.getText(new ByWicketIdPath("//eachRow[0]//sum")).equals("0");
 		assert ws.getText(new ByWicketIdPath("//eachRow[1]//count")).equals("0");

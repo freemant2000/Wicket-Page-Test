@@ -28,6 +28,7 @@ public class PageExtractedByWicketIdsTest {
 	public void testWicketLocator() {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(PageExtractedByWicketIds.class);
+		ws.subscribeAjaxDoneHandler();
 		assert ws.getValue(new ByWicketIdPath("//eachRow[0]//v")).equals("3");
 		assert ws.getValue(new ByWicketIdPath("//eachRow[1]//v")).equals("2");
 		assert ws.getValue(new ByWicketIdPath("//eachRow[2]//v")).equals("8");

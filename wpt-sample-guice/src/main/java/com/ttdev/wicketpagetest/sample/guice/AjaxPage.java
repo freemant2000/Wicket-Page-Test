@@ -25,6 +25,7 @@ import org.apache.wicket.model.PropertyModel;
 import com.google.inject.Inject;
 
 public class AjaxPage extends WebPage {
+	private static final long serialVersionUID = 1L;
 	@Inject
 	private CalcService service;
 	private int current = 0;
@@ -38,7 +39,7 @@ public class AjaxPage extends WebPage {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				current = service.calcNext(current);
-				target.addComponent(currentLabel);
+				target.add(currentLabel);
 			}
 		};
 		add(calcNext);

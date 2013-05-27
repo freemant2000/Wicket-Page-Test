@@ -35,6 +35,7 @@ public class MyApp extends WebApplication {
 	protected void init() {
 		super.init();
 		MockableSpringBeanInjector.installInjector(this); 
+		
 	}
 	@Override
 	public Session newSession(Request request, Response response) {

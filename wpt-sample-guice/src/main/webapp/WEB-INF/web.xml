@@ -16,22 +16,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	version="2.5">
-	<display-name>myapp</display-name>
-	<filter>
-		<filter-name>f1</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-		<init-param>
-			<param-name>applicationClassName</param-name>
-			<param-value>com.ttdev.wicketpagetest.sample.guice.MyApp</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>f1</filter-name>
-		<url-pattern>/app/*</url-pattern>
-	</filter-mapping>	
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name>myapp</display-name>
+  <filter>
+    <filter-name>f1</filter-name>
+    <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+    <init-param>
+      <param-name>applicationClassName</param-name>
+      <param-value>com.ttdev.wicketpagetest.sample.guice.MyApp</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>f1</filter-name>
+    <url-pattern>/app/*</url-pattern>
+  </filter-mapping>
 </web-app>

@@ -2,7 +2,7 @@
 	<parent>
 		<artifactId>wicket-page-test</artifactId>
 		<groupId>com.ttdev</groupId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ttdev</groupId>
@@ -10,7 +10,7 @@
 	<version>${wpt.version}</version>
 	<name>wpt-runtime-spring</name>
 	<properties>
-		<spring.version>3.0.3.RELEASE</spring.version>
+		<spring.version>3.1.3.RELEASE</spring.version>
 	</properties>
 	<dependencies>
 		<dependency>

@@ -23,7 +23,7 @@
 			<package name="com.ttdev.wicketpagetest.sample.plain"></package>
 		</packages>
 		<classes>
-			<class name="com.ttdev.wicketpagetest.WebPageTestContext"></class>
+			<class name="com.ttdev.wicketpagetest.sample.plain.TestFixture"></class>
 		</classes>
 	</test>
 </suite>

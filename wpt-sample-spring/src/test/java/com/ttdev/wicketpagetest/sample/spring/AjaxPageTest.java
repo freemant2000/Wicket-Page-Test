@@ -35,6 +35,7 @@ public class AjaxPageTest {
 		});
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(AjaxPage.class);
+		ws.subscribeAjaxDoneHandler();
 		WebElement output = ws.findElement(By.id("output"));
 		assert output.getText().equals("Current: 0");
 		ws.findElement(By.linkText("Calculate next")).click();

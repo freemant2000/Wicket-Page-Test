@@ -5,6 +5,7 @@ import java.lang.annotation.Annotation;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.protocol.http.WebApplication;
 

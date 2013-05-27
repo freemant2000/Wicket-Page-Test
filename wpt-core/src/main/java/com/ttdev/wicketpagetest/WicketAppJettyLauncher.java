@@ -19,7 +19,7 @@ package com.ttdev.wicketpagetest;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
-import org.apache.wicket.util.lang.PropertyResolver;
+import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.eclipse.jetty.servlet.FilterHolder;
 
 /**

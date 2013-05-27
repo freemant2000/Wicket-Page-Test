@@ -1,5 +1,7 @@
 package com.ttdev.wicketpagetest;
 
+import java.util.Locale;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory;
 import org.openqa.selenium.By;
@@ -44,9 +46,23 @@ public class WicketSelenium {
 						+ "for (var property in %1$s) {"
 						+ "if (property.match(/th[0-9]+/) && %1$s[property] != undefined) { return true; }"
 						+ "}" + "return false;};", "Wicket.throttler.entries");
+		String defineWicketAjaxComplete = "Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, errorThrown, textStatus) {})";
 		ajaxDoneExpr = defineWicketAjaxBusy + defineWicketThrottlingInProgress
 				+ "return !wicketAjaxBusy() && !wicketThrottlingInProgress();";
 
+	}
+
+	public void subscribeAjaxDoneHandler() {
+		JavascriptExecutor jsExec = (JavascriptExecutor) selenium;
+		String defineAjaxDoneIndicatorExpr = "if (typeof wicketPageTestAjaxDone === 'undefined') { var wicketPageTestAjaxDone = false;" +
+				"Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, errorThrown, textStatus) { window.wicketPageTestAjaxDone = true; });"+
+				" }";
+		jsExec.executeScript(defineAjaxDoneIndicatorExpr);
+	}
+
+	private void clearAjaxDoneIndicator() {
+		JavascriptExecutor jsExec = (JavascriptExecutor) selenium;
+		jsExec.executeScript("window.wicketPageTestAjaxDone = false;");
 	}
 
 	/**
@@ -60,14 +76,14 @@ public class WicketSelenium {
 		new WebDriverWait(selenium, AJAX_TIMEOUT_IN_SECONDS,
 				AJAX_CHECK_INTERVAL_IN_MILLI_SECONDS)
 				.until(new Predicate<WebDriver>() {
-
 					public boolean apply(WebDriver input) {
 						JavascriptExecutor jsExec = (JavascriptExecutor) input;
 						Boolean ajaxDone = (Boolean) jsExec
-								.executeScript(ajaxDoneExpr);
+								.executeScript("return window.wicketPageTestAjaxDone == true;");
 						return ajaxDone;
 					}
 				});
+		clearAjaxDoneIndicator();
 	}
 
 	/**
@@ -219,5 +235,13 @@ public class WicketSelenium {
 	 */
 	public void clear(By elementLocator) {
 		findElement(elementLocator).clear();
+	}
+
+	public void setPreferredLocale(Locale locale) {
+		openNonBookmarkablePage(SwitchLocalePage.class, locale);
+	}
+
+	public void switchDefaultLocale() {
+		openNonBookmarkablePage(SwitchLocalePage.class, Locale.getDefault());
 	}
 }

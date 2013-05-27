@@ -3,11 +3,15 @@
 	<parent>
 		<artifactId>wicket-page-test</artifactId>
 		<groupId>com.ttdev</groupId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ttdev</groupId>
 	<artifactId>wpt-core</artifactId>
 	<version>${wpt.version}</version>
+	<properties>
+	    <jetty.version>7.1.6.v20100715</jetty.version>
+	</properties>
 	<name>wpt-core</name>
 	<dependencies>
 		<dependency>
@@ -27,10 +31,18 @@
 			<artifactId>selenium-java</artifactId>
 			<version>2.11.0</version>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
 			<version>7.1.6.v20100715</version>
 		</dependency>
+		 -->
+				<dependency>
+			<groupId>org.eclipse.jetty.aggregate</groupId>
+			<artifactId>jetty-all-server</artifactId>
+			<version>7.5.0.v20110901</version>
+		</dependency>
+		
 	</dependencies>
 </project>

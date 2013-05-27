@@ -27,6 +27,7 @@ public class ThrottlingAjaxPageTest {
 	public void testEasyWaitingForAjaxWithThrottling() {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(ThrottlingAjaxPage.class);
+		ws.subscribeAjaxDoneHandler();
 		ws.findWicketElement("//input").sendKeys("a");
 		ws.findWicketElement("//input").sendKeys("b");
 		ws.waitUntilAjaxDone();

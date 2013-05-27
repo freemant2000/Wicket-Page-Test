@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.PropertyModel;
 
 public class PageExtractedByWicketIds extends WebPage {
+	private static final long serialVersionUID = 1L;
 	private Label totalLabel;
 	private List<Integer> values;
 
@@ -55,13 +56,13 @@ public class PageExtractedByWicketIds extends WebPage {
 					@Override
 					protected void onSubmit(AjaxRequestTarget target,
 							Form<?> form) {
-						target.addComponent(totalLabel);
+						target.add(totalLabel);
 					}
 
 					@Override
 					protected void onError(AjaxRequestTarget target,
 							Form<?> form) {
-						
+
 					}
 
 				});

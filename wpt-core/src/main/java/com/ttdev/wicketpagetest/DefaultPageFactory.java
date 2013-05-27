@@ -6,7 +6,6 @@ import org.apache.wicket.Page;
  * The default implementation for {@link PageFactory}.
  * 
  * @author Kent Tong
- * 
  */
 public class DefaultPageFactory implements PageFactory {
 	private Class<? extends Page> pageClass;
@@ -21,5 +20,4 @@ public class DefaultPageFactory implements PageFactory {
 	public Page createPage() {
 		return new ObjectFactory().create(pageClass, constructorArgs);
 	}
-
 }

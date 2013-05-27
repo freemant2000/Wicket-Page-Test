@@ -5,7 +5,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 
 /**
  * If you are unit testing a page that renders another page as the response, in

@@ -22,6 +22,8 @@ import org.apache.wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import com.google.inject.Inject;
 import com.ttdev.wicketpagetest.BreadCrumbNavigator;
@@ -58,7 +60,7 @@ public class ProductIDPanel extends BreadCrumbPanel {
 		form.add(new TextField<String>("productID"));
 	}
 
-	public String getTitle() {
-		return "Product ID";
+	public IModel<String> getTitle() {
+		return new Model<String>("Product ID");
 	}
 }
