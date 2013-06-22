@@ -5,7 +5,6 @@ import java.lang.annotation.Annotation;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.application.IComponentInstantiationListener;
-import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.protocol.http.WebApplication;
 
@@ -95,14 +94,22 @@ public class MockableBeanInjector extends Injector implements
 	 */
 	@Override
 	public void inject(Object object) {
-		inject(object, mockedBeansFactory);
-		// The injector will inject a bean into the fields that are not null.
+		injectMocks(object);
+		// The orginalInjector will inject a bean into the fields that are not null.
 		// So, if a mocked object has been injected in the previous step, the
 		// injector won't touch it.
+		injectOriginals(object);
+
+	}
+
+	protected void injectMocks(Object object) {
+		inject(object, mockedBeansFactory);
+	}
+
+	protected void injectOriginals(Object object) {
 		if (originalInjector != null) {
 			originalInjector.inject(object);
 		}
-
 	}
 
 	/**

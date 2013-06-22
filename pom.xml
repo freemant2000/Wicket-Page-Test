@@ -67,12 +67,14 @@
 	<modules>
 		<module>wpt-core</module>
 		<module>wpt-runtime</module>
+		<module>wpt-runtime-cdi</module>
 		<module>wpt-runtime-spring</module>
 		<module>wpt-runtime-guice</module>
 		<module>wpt-sample-spring</module>
 		<module>wpt-sample-junit</module>
 		<module>wpt-sample-plain</module>
 		<module>wpt-sample-guice</module>
+		<module>wpt-sample-cdi</module>
 	</modules>
 	<repositories>
 		<repository>

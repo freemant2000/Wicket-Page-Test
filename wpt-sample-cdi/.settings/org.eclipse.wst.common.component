@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="wpt-sample-junit">
+    <wb-module deploy-name="wpt-sample-cdi">
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
         <dependent-module archiveName="wpt-runtime-3.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime/wpt-runtime">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wpt-runtime-spring-3.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime-spring/wpt-runtime-spring">
+        <dependent-module archiveName="wpt-runtime-cdi-3.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime-cdi/wpt-runtime-cdi">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <property name="context-root" value="wpt-sample-junit"/>
-        <property name="java-output-path" value="/wpt-sample-junit/target/classes"/>
+        <property name="context-root" value="wpt-sample-cdi"/>
+        <property name="java-output-path" value="/wpt-sample-cdi/target/classes"/>
     </wb-module>
 </project-modules>

@@ -27,36 +27,17 @@ public class WicketSelenium {
 	private static final long AJAX_CHECK_INTERVAL_IN_MILLI_SECONDS = 100L;
 	private WebDriver selenium;
 	private Configuration cfg;
-	private String ajaxDoneExpr;
 
 	public WicketSelenium(Configuration cfg, WebDriver selenium) {
 		this.selenium = selenium;
 		this.cfg = cfg;
-		initAjaxDoneExpr();
-	}
-
-	private void initAjaxDoneExpr() {
-		String defineWicketAjaxBusy = String.format(
-				"wicketAjaxBusy = function () {"
-						+ "for (var channelName in %1$s) {"
-						+ "if (%1$s[channelName].busy) { return true; }" + "}"
-						+ "return false;};", "Wicket.channelManager.channels");
-		String defineWicketThrottlingInProgress = String
-				.format("wicketThrottlingInProgress = function () {"
-						+ "for (var property in %1$s) {"
-						+ "if (property.match(/th[0-9]+/) && %1$s[property] != undefined) { return true; }"
-						+ "}" + "return false;};", "Wicket.throttler.entries");
-		String defineWicketAjaxComplete = "Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, errorThrown, textStatus) {})";
-		ajaxDoneExpr = defineWicketAjaxBusy + defineWicketThrottlingInProgress
-				+ "return !wicketAjaxBusy() && !wicketThrottlingInProgress();";
-
 	}
 
 	public void subscribeAjaxDoneHandler() {
 		JavascriptExecutor jsExec = (JavascriptExecutor) selenium;
-		String defineAjaxDoneIndicatorExpr = "if (typeof wicketPageTestAjaxDone === 'undefined') { var wicketPageTestAjaxDone = false;" +
-				"Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, errorThrown, textStatus) { window.wicketPageTestAjaxDone = true; });"+
-				" }";
+		String defineAjaxDoneIndicatorExpr = "if (typeof wicketPageTestAjaxDone === 'undefined') { var wicketPageTestAjaxDone = false;"
+				+ "Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, errorThrown, textStatus) { window.wicketPageTestAjaxDone = true; });"
+				+ " }";
 		jsExec.executeScript(defineAjaxDoneIndicatorExpr);
 	}
 

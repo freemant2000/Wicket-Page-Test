@@ -3,10 +3,10 @@ package com.ttdev.wicketpagetest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.jetty.util.ArrayQueue;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
@@ -68,7 +68,7 @@ public class ByWicketIdPath extends By {
 	public WebElement findByWicketId(WebElement baseElement,
 			boolean isAnyLevelDeep, String wicketId, int index) {
 		int noElementsFound = 0;
-		Queue<WebElement> queue = new ArrayQueue<WebElement>();
+		Queue<WebElement> queue = new ConcurrentLinkedQueue<WebElement>();
 		queue.addAll(getChildren(baseElement));
 		while (!queue.isEmpty()) {
 			WebElement child = queue.poll();
