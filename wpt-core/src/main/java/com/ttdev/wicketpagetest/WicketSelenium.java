@@ -139,7 +139,7 @@ public class WicketSelenium {
 	 * @return The corresponding HTML slot
 	 */
 	public WebElement findWicketElement(String path) {
-		return findElement(new ByWicketIdPath(path));
+		return findElement(new ByWicketIdPathFastVersion(path));
 	}
 
 	/**

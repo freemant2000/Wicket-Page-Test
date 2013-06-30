@@ -7,6 +7,9 @@
         <dependent-module archiveName="wpt-runtime-3.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime/wpt-runtime">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="wpt-runtime-spring-3.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wpt-runtime-spring/wpt-runtime-spring">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="wpt-sample-spring"/>
         <property name="java-output-path"/>
     </wb-module>

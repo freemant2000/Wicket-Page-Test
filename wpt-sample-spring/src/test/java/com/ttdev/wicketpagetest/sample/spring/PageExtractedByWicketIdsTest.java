@@ -21,27 +21,26 @@ import org.testng.annotations.Test;
 
 import com.ttdev.wicketpagetest.ByWicketIdPath;
 import com.ttdev.wicketpagetest.WebPageTestContext;
-import com.ttdev.wicketpagetest.WicketSelenium;
+import com.ttdev.wicketpagetest.WicketSeleniumDriver;
 
 @Test
 public class PageExtractedByWicketIdsTest {
 	public void testWicketLocator() {
-		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		WicketSeleniumDriver ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(PageExtractedByWicketIds.class);
 		ws.subscribeAjaxDoneHandler();
-		assert ws.getValue(new ByWicketIdPath("//eachRow[0]//v")).equals("3");
-		assert ws.getValue(new ByWicketIdPath("//eachRow[1]//v")).equals("2");
-		assert ws.getValue(new ByWicketIdPath("//eachRow[2]//v")).equals("8");
-		assert ws.getText(new ByWicketIdPath("//total")).equals("13");
+		assert ws.getValue("//eachRow[0]//v").equals("3");
+		assert ws.getValue("//eachRow[1]//v").equals("2");
+		assert ws.getValue("//eachRow[2]//v").equals("8");
+		assert ws.getText("//total").equals("13");
 		WebElement v1 = ws.findWicketElement("//eachRow[1]//v");
 		v1.clear();
 		v1.sendKeys("5");
 		WebElement ok = ws.findWicketElement("//eachRow[1]//ok");
 		ok.click();
 		ws.waitUntilAjaxDone();
-		assert ws.getText(new ByWicketIdPath("//total")).equals("16");
-		assert ws.getText(new ByWicketIdPath("//id.containing.dots")).equals(
+		assert ws.getText("//total").equals("16") : ws.getText("//total");
+		assert ws.getText("//id.containing.dots").equals(
 				"xyz");
 	}
-
 }

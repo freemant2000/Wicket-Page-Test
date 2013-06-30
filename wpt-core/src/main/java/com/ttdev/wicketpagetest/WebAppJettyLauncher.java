@@ -20,6 +20,7 @@ public class WebAppJettyLauncher {
 	private WebAppContext context;
 	private Server server;
 
+	@SuppressWarnings("deprecation")
 	public void startAppInJetty(WebAppJettyConfiguration cfg) {
 		server = new Server();
 		Connector connector = new SelectChannelConnector();

@@ -12,6 +12,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.cdi.CdiConfiguration;
+import org.apache.wicket.cdi.CdiContainer;
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -20,12 +21,23 @@ import org.jboss.weld.environment.servlet.Listener;
 
 public class MockableCDIBeanInjector extends MockableBeanInjector {
 
+	private static MockableCDIBeanInjector instance;
+
+	public static void injectBeans(Object object) {
+		instance.inject(object);
+	}
+
 	public MockableCDIBeanInjector(
 			final IComponentInstantiationListener listener) {
 		super(Inject.class, new Injector() {
 			@Override
 			public void inject(Object component) {
-				listener.onInstantiation((Component) component);
+				if (component instanceof Component) {
+					listener.onInstantiation((Component) component);
+				} else {
+					CdiContainer.get().getNonContextualManager()
+							.inject(component);
+				}
 			}
 		});
 	}
@@ -49,7 +61,7 @@ public class MockableCDIBeanInjector extends MockableBeanInjector {
 		Args.notNull(instantiationListener, "instantiationListener");
 		listeners.remove(instantiationListener);
 		MockableBeanInjector.installInjector(webapp,
-				new MockableCDIBeanInjector(instantiationListener));
+				instance = new MockableCDIBeanInjector(instantiationListener));
 	}
 
 	@Override
@@ -57,7 +69,7 @@ public class MockableCDIBeanInjector extends MockableBeanInjector {
 		injectOriginals(object);
 		injectMocks(object);
 	}
-	
+
 	@Override
 	protected void inject(Object object, IFieldValueFactory factory) {
 		final Class<?> clazz = object.getClass();

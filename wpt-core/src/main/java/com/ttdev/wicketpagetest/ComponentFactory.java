@@ -1,6 +1,7 @@
 package com.ttdev.wicketpagetest;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * It is used by the {@link ComponentTestPage} to create the target component in the
@@ -11,6 +12,6 @@ import org.apache.wicket.Component;
  * @author Andy Chu
  * 
  */
-public interface ComponentFactory {
+public interface ComponentFactory extends IClusterable {
 	Component createComponent(String id);
 }

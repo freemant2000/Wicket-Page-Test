@@ -15,7 +15,14 @@ public class GreetingPageTest {
 	abstract class MockedGreetingService implements GreetingService {
 		@Override
 		public String getSubject() {
-			return "m";
+			return "M";
+		}
+	}
+
+	abstract class MockedUpperCaseService implements UpperCaseService {
+		@Override
+		public String upperCase(String s) {			
+			return s;
 		}
 	}
 
@@ -23,9 +30,11 @@ public class GreetingPageTest {
 	public void testMockCDIInjection() {
 		MockableCDIBeanInjector.mockBean("greetingService",
 				factory.implementAbstractMethods(MockedGreetingService.class));
+		MockableCDIBeanInjector.mockBean("upperCaseService",
+				factory.implementAbstractMethods(MockedUpperCaseService.class));
 		WicketSeleniumDriver ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(GreetingPage.class);
 		assert ws.getText("//subject").equals("m");
-		assert ws.getText("//name").equals("n");
+		assert ws.getText("//name").equals("n") : ws.getText("//name");
 	}
 }
