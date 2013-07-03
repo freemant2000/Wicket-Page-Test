@@ -18,38 +18,37 @@ package com.ttdev.wicketpagetest.sample.spring;
 
 import org.testng.annotations.Test;
 
-import com.ttdev.wicketpagetest.ByWicketIdPath;
 import com.ttdev.wicketpagetest.WebPageTestContext;
-import com.ttdev.wicketpagetest.WicketSelenium;
+import com.ttdev.wicketpagetest.WicketSeleniumDriver;
 
 @Test
 public class PageRefreshingTRTest {
 	public void testWicketLocatorOnRefreshedTR() {
-		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		WicketSeleniumDriver ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(PageRefreshingTR.class);
 		ws.subscribeAjaxDoneHandler();
-		assert ws.getText(new ByWicketIdPath("//eachRow[0]//count")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[0]//sum")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[1]//count")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[1]//sum")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[2]//count")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[2]//sum")).equals("0");
-		ws.click(new ByWicketIdPath("//eachRow[1]//inc"));
+		assert ws.getText("//eachRow[0]//count").equals("0");
+		assert ws.getText("//eachRow[0]//sum").equals("0");
+		assert ws.getText("//eachRow[1]//count").equals("0");
+		assert ws.getText("//eachRow[1]//sum").equals("0");
+		assert ws.getText("//eachRow[2]//count").equals("0");
+		assert ws.getText("//eachRow[2]//sum").equals("0");
+		ws.click("//eachRow[1]//inc");
 		ws.waitUntilAjaxDone();
-		assert ws.getText(new ByWicketIdPath("//eachRow[0]//count")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[0]//sum")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[1]//count")).equals("1");
-		assert ws.getText(new ByWicketIdPath("//eachRow[1]//sum")).equals("1");
-		assert ws.getText(new ByWicketIdPath("//eachRow[2]//count")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[2]//sum")).equals("0");
-		ws.click(new ByWicketIdPath("//eachRow[1]//inc"));
+		assert ws.getText("//eachRow[0]//count").equals("0");
+		assert ws.getText("//eachRow[0]//sum").equals("0");
+		assert ws.getText("//eachRow[1]//count").equals("1");
+		assert ws.getText("//eachRow[1]//sum").equals("1");
+		assert ws.getText("//eachRow[2]//count").equals("0");
+		assert ws.getText("//eachRow[2]//sum").equals("0");
+		ws.click("//eachRow[1]//inc");
 		ws.waitUntilAjaxDone();
-		assert ws.getText(new ByWicketIdPath("//eachRow[0]//count")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[0]//sum")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[1]//count")).equals("2");
-		assert ws.getText(new ByWicketIdPath("//eachRow[1]//sum")).equals("3");
-		assert ws.getText(new ByWicketIdPath("//eachRow[2]//count")).equals("0");
-		assert ws.getText(new ByWicketIdPath("//eachRow[2]//sum")).equals("0");
+		assert ws.getText("//eachRow[0]//count").equals("0");
+		assert ws.getText("//eachRow[0]//sum").equals("0");
+		assert ws.getText("//eachRow[1]//count").equals("2");
+		assert ws.getText("//eachRow[1]//sum").equals("3");
+		assert ws.getText("//eachRow[2]//count").equals("0");
+		assert ws.getText("//eachRow[2]//sum").equals("0");
 	}
 
 }

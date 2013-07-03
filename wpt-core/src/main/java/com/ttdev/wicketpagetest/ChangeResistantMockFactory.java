@@ -1,5 +1,7 @@
 package com.ttdev.wicketpagetest;
 
+import org.apache.wicket.util.io.IClusterable;
+
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.NoOp;
 
@@ -24,7 +26,8 @@ import net.sf.cglib.proxy.NoOp;
  * @author Kent Tong
  * 
  */
-public class ChangeResistantMockFactory {
+public class ChangeResistantMockFactory implements IClusterable {
+	private static final long serialVersionUID = 1L;
 	private Object outerInstance;
 
 	public ChangeResistantMockFactory(Object outerInstance) {

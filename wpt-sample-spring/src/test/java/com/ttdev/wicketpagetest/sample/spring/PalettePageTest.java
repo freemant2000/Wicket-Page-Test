@@ -24,10 +24,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
 
-import com.ttdev.wicketpagetest.ByWicketIdPath;
 import com.ttdev.wicketpagetest.MockableSpringBeanInjector;
 import com.ttdev.wicketpagetest.WebPageTestContext;
-import com.ttdev.wicketpagetest.WicketSelenium;
+import com.ttdev.wicketpagetest.WicketSeleniumDriver;
 
 @Test
 public class PalettePageTest {
@@ -51,7 +50,7 @@ public class PalettePageTest {
 			public void add(Product p) {
 			}
 		});
-		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		WicketSeleniumDriver ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(PalettePage.class);
 		Select leftSelect = new Select(ws.findWicketElement("//choices"));
 		List<WebElement> allProducts = leftSelect.getOptions();
@@ -60,7 +59,7 @@ public class PalettePageTest {
 		assert allProducts.get(1).getText().equals("eraser");
 		assert allProducts.get(2).getText().equals("paper clip");
 		leftSelect.selectByVisibleText("eraser");
-		ws.click(new ByWicketIdPath("//addButton"));
+		ws.click("//addButton");
 		leftSelect = new Select(ws.findWicketElement("//choices"));
 		allProducts = leftSelect.getOptions();
 		assert allProducts.size() == 2;

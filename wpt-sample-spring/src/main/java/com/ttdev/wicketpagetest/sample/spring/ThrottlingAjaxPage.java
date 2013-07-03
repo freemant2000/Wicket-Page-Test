@@ -23,7 +23,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.util.time.Duration;
 
 public class ThrottlingAjaxPage extends WebPage {
 	private static final long serialVersionUID = 1L;

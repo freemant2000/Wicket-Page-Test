@@ -9,17 +9,17 @@ import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 /**
  * It is a Wicket locator for Selenium. For example, Using //myform[2]//name as
  * the path it will first locate the 3rd element (breadth-first search) with
  * wicket:id="myform" and then the first element in it with wicket:id="name". If
- * it must be an immediate child, use / instead of //. By narrowing down the
- * search scope, we can speed up the efficiency of the algorithm.
+ * it must be an immediate child, use / instead of //.
  * 
  * @author Andy Chu
- * 
+ * @author Kent Tong
  */
 public class ByWicketIdPathFastVersion extends By {
 	private String path;
@@ -61,9 +61,13 @@ public class ByWicketIdPathFastVersion extends By {
 		WicketWebElement root = new WicketWebElement();
 		WicketWebElement last = root;
 		for (WebElement element : elements) {
-			WicketWebElement node = new WicketWebElement(element);
-			last.findParent(node).add(node);
-			last = node;
+			try {
+				WicketWebElement node = new WicketWebElement(element);
+				last.findParent(node).add(node);
+				last = node;
+			} catch (StaleElementReferenceException e) {
+				// NOTE: just ignore this stale element
+			}
 		}
 		return root;
 	}
@@ -71,7 +75,6 @@ public class ByWicketIdPathFastVersion extends By {
 	public WebElement findByPath(SearchContext context, String path) {
 		Matcher matcher = stepPattern.matcher(path);
 		WicketWebElement baseElement = null;
-		int loopCount = 0;
 		while (matcher.find()) {
 			boolean isAnyLevelDeep = matcher.group(1).equals("//");
 			String wicketId = matcher.group(2);
@@ -80,7 +83,8 @@ public class ByWicketIdPathFastVersion extends By {
 			if (indexString != null) {
 				index = Integer.parseInt(indexString);
 			}
-			if (loopCount == 0) {
+			boolean hasNoRootYet = (baseElement == null);
+			if (hasNoRootYet) {
 				baseElement = getRootElement(context, wicketId);
 			}
 			WicketWebElement child = findByWicketId(baseElement,
@@ -89,9 +93,8 @@ public class ByWicketIdPathFastVersion extends By {
 				return null;
 			}
 			baseElement = child;
-			loopCount++;
 		}
-		return baseElement.getElement();
+		return baseElement == null ? null : baseElement.getElement();
 	}
 
 	private WicketWebElement findByWicketId(WicketWebElement baseElement,
@@ -115,19 +118,26 @@ public class ByWicketIdPathFastVersion extends By {
 	}
 
 	public boolean matchesWicketId(WebElement element, String wicketId) {
-		String wicketIdValue = element.getAttribute("wicket:id");
-		if (wicketIdValue != null && wicketIdValue.equals(wicketId)) {
-			return true;
-		}
-		// wicket:id may not be there (see WICKET-2832), also try wicketpath.
-		// It must be prepared to deal with wicketpath values like ???_foo and
-		// ???_foo_0.
-		// In addition, if the wicket ID contains a dot, it must be escaped.
-		String wicketPathPattern = "^((.*[^_])_)*"
-				+ wicketId.replace(".", "\\.").replace("_", "__") + "(_\\d+)?$";
-		String pathValue = element.getAttribute("wicketpath");
-		if (pathValue != null && pathValue.matches(wicketPathPattern)) {
-			return true;
+		try {
+			String wicketIdValue = element.getAttribute("wicket:id");
+			if (wicketIdValue != null && wicketIdValue.equals(wicketId)) {
+				return true;
+			}
+			// wicket:id may not be there (see WICKET-2832), also try
+			// wicketpath.
+			// It must be prepared to deal with wicketpath values like ???_foo
+			// and
+			// ???_foo_0.
+			// In addition, if the wicket ID contains a dot, it must be escaped.
+			String wicketPathPattern = "^((.*[^_])_)*"
+					+ wicketId.replace(".", "\\.").replace("_", "__")
+					+ "(_\\d+)?$";
+			String pathValue = element.getAttribute("wicketpath");
+			if (pathValue != null && pathValue.matches(wicketPathPattern)) {
+				return true;
+			}
+		} catch (StaleElementReferenceException e) {
+			return false;
 		}
 		return false;
 	}

@@ -1,6 +1,7 @@
 package com.ttdev.wicketpagetest;
 
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -13,24 +14,33 @@ public class WicketSeleniumDriver extends WicketSelenium {
 		super(cfg, selenium);
 	}
 
+	public void waitUntilTextEquals(final String wicketPath, final String text) {
+		wait(new ExpectedCondition<Boolean>() {
+			@Override
+			public Boolean apply(WebDriver driver) {
+				return getText(wicketPath).equals(text);
+			}
+		});
+	}
+
 	public void click(String wicketPath) {
 		findWicketElement(wicketPath).click();
 	}
 
 	public void clear(String wicketPath) {
-		clear(new ByWicketIdPath(wicketPath));
+		findWicketElement(wicketPath).clear();
 	}
 
 	public void sendKeys(String wicketPath, CharSequence... keysToSend) {
-		sendKeys(new ByWicketIdPath(wicketPath), keysToSend);
+		findWicketElement(wicketPath).sendKeys(keysToSend);
 	}
 
 	public String getText(String wicketPath) {
-		return getText(new ByWicketIdPath(wicketPath));
+		return findWicketElement(wicketPath).getText();
 	}
 
 	public String getValue(String wicketPath) {
-		return getValue(new ByWicketIdPath(wicketPath));
+		return getAttribute(wicketPath, "value");
 	}
 
 	public String getAttribute(String wicketPath, String attrName) {
@@ -38,7 +48,13 @@ public class WicketSeleniumDriver extends WicketSelenium {
 	}
 
 	public void wait(ExpectedCondition<?> condition) {
-		new WebDriverWait(getSelenium(), 5 * 1000L).until(condition);
+		try {
+			new WebDriverWait(getSelenium(), AJAX_TIMEOUT_IN_SECONDS)
+					.until(condition);
+		} catch (StaleElementReferenceException e) {
+			// NOTE: wait for the latest page for StaleElementReferenceException
+			wait(condition);
+		}
 	}
 
 	public void waitUntilElementVisible(final String wicketPath) {
@@ -72,7 +88,7 @@ public class WicketSeleniumDriver extends WicketSelenium {
 
 	public boolean isElementPresent(String wicketPath) {
 		try {
-			findElement(new ByWicketIdPath(wicketPath));
+			findWicketElement(wicketPath);
 			return true;
 		} catch (NoSuchElementException e) {
 			return false;
@@ -82,7 +98,6 @@ public class WicketSeleniumDriver extends WicketSelenium {
 	public boolean isElementVisible(String wicketPath) {
 		return findWicketElement(wicketPath).isDisplayed();
 	}
-	
 
 	public void mouseMoveOver(String wicketPath) {
 		WebElement targetElement = findWicketElement(wicketPath);

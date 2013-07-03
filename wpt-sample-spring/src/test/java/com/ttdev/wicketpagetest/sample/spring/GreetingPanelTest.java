@@ -19,11 +19,10 @@ package com.ttdev.wicketpagetest.sample.spring;
 import org.apache.wicket.Component;
 import org.testng.annotations.Test;
 
-import com.ttdev.wicketpagetest.ByWicketIdPath;
 import com.ttdev.wicketpagetest.ComponentFactory;
 import com.ttdev.wicketpagetest.MockableSpringBeanInjector;
 import com.ttdev.wicketpagetest.WebPageTestContext;
-import com.ttdev.wicketpagetest.WicketSelenium;
+import com.ttdev.wicketpagetest.WicketSeleniumDriver;
 
 @Test
 public class GreetingPanelTest {
@@ -34,12 +33,14 @@ public class GreetingPanelTest {
 				return "Peter";
 			}
 		});
-		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		WicketSeleniumDriver ws = WebPageTestContext.getWicketSelenium();
 		ws.openComponent(new ComponentFactory() {
+			private static final long serialVersionUID = 1L;
+
 			public Component createComponent(String id) {
 				return new GreetingPanel(id);
 			}
 		});
-		assert ws.getText(new ByWicketIdPath("//name")).equals("Peter");
+		assert ws.getText("//name").equals("Peter");
 	}
 }

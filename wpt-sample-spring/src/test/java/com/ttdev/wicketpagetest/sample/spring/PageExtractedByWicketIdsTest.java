@@ -19,7 +19,6 @@ package com.ttdev.wicketpagetest.sample.spring;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
-import com.ttdev.wicketpagetest.ByWicketIdPath;
 import com.ttdev.wicketpagetest.WebPageTestContext;
 import com.ttdev.wicketpagetest.WicketSeleniumDriver;
 

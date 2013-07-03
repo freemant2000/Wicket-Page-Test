@@ -23,8 +23,7 @@ import com.thoughtworks.selenium.Selenium;
  * @author Andy Chu
  */
 public class WicketSelenium {
-	private static final int AJAX_TIMEOUT_IN_SECONDS = 3;
-	private static final long AJAX_CHECK_INTERVAL_IN_MILLI_SECONDS = 100L;
+	protected static final int AJAX_TIMEOUT_IN_SECONDS = 10;
 	private WebDriver selenium;
 	private Configuration cfg;
 
@@ -54,8 +53,7 @@ public class WicketSelenium {
 	 * and thus is subject to changes.
 	 */
 	public void waitUntilAjaxDone() {
-		new WebDriverWait(selenium, AJAX_TIMEOUT_IN_SECONDS,
-				AJAX_CHECK_INTERVAL_IN_MILLI_SECONDS)
+		new WebDriverWait(selenium, AJAX_TIMEOUT_IN_SECONDS)
 				.until(new Predicate<WebDriver>() {
 					public boolean apply(WebDriver input) {
 						JavascriptExecutor jsExec = (JavascriptExecutor) input;

@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import com.google.inject.Inject;
 
 public class BookmarkablePage extends WebPage {
+	private static final long serialVersionUID = 1L;
 	@Inject
 	private GreetingService gs;
 

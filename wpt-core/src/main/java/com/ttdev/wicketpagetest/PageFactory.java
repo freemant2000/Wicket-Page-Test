@@ -1,6 +1,7 @@
 package com.ttdev.wicketpagetest;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * It is used by the {@link LauncherPage} to create the target page in the
@@ -11,7 +12,7 @@ import org.apache.wicket.Page;
  * @author Kent Tong
  * 
  */
-public interface PageFactory {
+public interface PageFactory extends IClusterable {
 
 	Page createPage();
 

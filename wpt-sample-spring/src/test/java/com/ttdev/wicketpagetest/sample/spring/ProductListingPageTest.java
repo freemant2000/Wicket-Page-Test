@@ -21,11 +21,10 @@ import java.util.List;
 
 import org.testng.annotations.Test;
 
-import com.ttdev.wicketpagetest.ByWicketIdPath;
 import com.ttdev.wicketpagetest.ChangeResistantMockFactory;
 import com.ttdev.wicketpagetest.MockableSpringBeanInjector;
 import com.ttdev.wicketpagetest.WebPageTestContext;
-import com.ttdev.wicketpagetest.WicketSelenium;
+import com.ttdev.wicketpagetest.WicketSeleniumDriver;
 
 @Test
 public class ProductListingPageTest {
@@ -45,11 +44,11 @@ public class ProductListingPageTest {
 		ProductService mock = mockFactory
 				.implementAbstractMethods(MockService.class);
 		MockableSpringBeanInjector.mockBean("productService", mock);
-		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		WicketSeleniumDriver ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(ProductListingPage.class);
-		assert ws.getText(new ByWicketIdPath("//eachProduct[0]//name")).equals(
+		assert ws.getText("//eachProduct[0]//name").equals(
 				"ball pen");
-		assert ws.getText(new ByWicketIdPath("//eachProduct[1]//name")).equals(
+		assert ws.getText("//eachProduct[1]//name").equals(
 				"eraser");
 	}
 

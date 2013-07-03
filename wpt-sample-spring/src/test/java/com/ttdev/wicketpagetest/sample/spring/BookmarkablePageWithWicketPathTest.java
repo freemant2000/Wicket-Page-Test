@@ -18,10 +18,9 @@ package com.ttdev.wicketpagetest.sample.spring;
 
 import org.testng.annotations.Test;
 
-import com.ttdev.wicketpagetest.ByWicketIdPath;
 import com.ttdev.wicketpagetest.MockableSpringBeanInjector;
 import com.ttdev.wicketpagetest.WebPageTestContext;
-import com.ttdev.wicketpagetest.WicketSelenium;
+import com.ttdev.wicketpagetest.WicketSeleniumDriver;
 
 @Test
 public class BookmarkablePageWithWicketPathTest {
@@ -34,9 +33,9 @@ public class BookmarkablePageWithWicketPathTest {
 			}
 
 		});
-		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
+		WicketSeleniumDriver ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(BookmarkablePage.class);
-		assert ws.getText(new ByWicketIdPath("//name")).equals("Peter");
+		assert ws.getText("//name").equals("Peter");
 	}
 
 }

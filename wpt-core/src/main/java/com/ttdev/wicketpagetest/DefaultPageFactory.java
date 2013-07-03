@@ -8,6 +8,7 @@ import org.apache.wicket.Page;
  * @author Kent Tong
  */
 public class DefaultPageFactory implements PageFactory {
+	private static final long serialVersionUID = 1L;
 	private Class<? extends Page> pageClass;
 	private Object[] constructorArgs;
 

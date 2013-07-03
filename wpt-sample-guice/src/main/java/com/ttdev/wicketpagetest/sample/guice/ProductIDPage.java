@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.ttdev.wicketpagetest.PageFlowNavigator;
 
 public class ProductIDPage extends WebPage {
+	private static final long serialVersionUID = 1L;
 	private String productID;
 	@Inject
 	private PageFlowNavigator navigator;
