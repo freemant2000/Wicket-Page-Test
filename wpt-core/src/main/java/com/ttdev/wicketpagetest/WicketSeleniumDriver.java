@@ -14,15 +14,6 @@ public class WicketSeleniumDriver extends WicketSelenium {
 		super(cfg, selenium);
 	}
 
-	public void waitUntilTextEquals(final String wicketPath, final String text) {
-		wait(new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(WebDriver driver) {
-				return getText(wicketPath).equals(text);
-			}
-		});
-	}
-
 	public void click(String wicketPath) {
 		findWicketElement(wicketPath).click();
 	}
