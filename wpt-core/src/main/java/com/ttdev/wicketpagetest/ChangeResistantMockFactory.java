@@ -38,7 +38,7 @@ public class ChangeResistantMockFactory implements IClusterable {
 	public <T> T implementAbstractMethods(Class<T> clazz) {
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(clazz);
-		enhancer.setCallback(NoOp.INSTANCE);
+		enhancer.setCallback(new ClusterableNoOp());
 		return (T) enhancer.create(new Class[] { outerInstance.getClass() },
 				new Object[] { outerInstance });
 	}

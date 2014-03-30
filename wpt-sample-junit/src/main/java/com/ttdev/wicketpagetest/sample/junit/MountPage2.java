@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 Kent Tong <freemant2000@yahoo.com>
+ * Copyright (C) 2014 Andy Chu <andychu@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,23 +16,15 @@
 
 package com.ttdev.wicketpagetest.sample.junit;
 
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import com.ttdev.wicketpagetest.MockableSpringBeanInjector;
+public class MountPage2 extends WebPage {
+	private static final long serialVersionUID = 1L;
 
-public class MyApp extends WebApplication {
-	
-	@Override
-	public Class<BookmarkablePage> getHomePage() {
-		return BookmarkablePage.class;
+	public MountPage2(PageParameters parameters) {
+		add(new Label("name", parameters.get("name").toString()));
+		add(new Label("name2", parameters.get("name2").toString()));
 	}
-
-	@Override
-	protected void init() {
-		super.init();
-		MockableSpringBeanInjector.installInjector(this);
-		mountPage("/mount", MountPage.class);
-		mountPage("/mount2", MountPage2.class);
-	}
-	
 }

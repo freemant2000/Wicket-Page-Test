@@ -1,9 +1,13 @@
 package com.ttdev.wicketpagetest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -77,9 +81,47 @@ public class WicketSelenium {
 
 	}
 
+	/**
+	 * Open a mounted Wicket page.
+	 * 
+	 * @param mountPoint
+	 *            the mount point of the page
+	 * 
+	 * @param parameters
+	 *            the page parameters
+	 */
+	public void openMountedPage(String mountPoint, PageParameters parameters) {
+		String appBase = getWicketAppBase();
+		String fullQuery = getFullQueryString(parameters);
+		String url = fullQuery.isEmpty() ? (appBase + mountPoint) : appBase
+				+ mountPoint + "?" + fullQuery;
+		selenium.get(url);
+	}
+
+	private String getFullQueryString(PageParameters parameters) {
+		List<String> queries = new ArrayList<String>();
+		Set<String> keys = parameters.getNamedKeys();
+		for (String key : keys) {
+			queries.add(String.format("%s=%s", key, parameters.get(key)
+					.toString()));
+		}
+		String fullQuery = "";
+		if (queries.size() == 1) {
+			fullQuery = queries.get(0);
+		}
+		if (queries.size() > 1) {
+			fullQuery = queries.get(0);
+			for (int i = 1; i < queries.size(); i++) {
+				fullQuery += ("&" + queries.get(i));
+			}
+		}
+		return fullQuery;
+	}
+
 	private String getWicketAppBase() {
 		return String.format("http://localhost:%d/%s",
-				cfg.getJettyServerPort(), cfg.getWicketFilterPrefix() + "/");
+				cfg.getJettyServerPort(), cfg.getWicketFilterPrefix().trim()
+						.isEmpty() ? "" : (cfg.getWicketFilterPrefix() + "/"));
 	}
 
 	/**
