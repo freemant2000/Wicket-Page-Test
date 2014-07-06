@@ -5,6 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import com.ttdev.wicketpagetest.Configuration;
 import com.ttdev.wicketpagetest.WebPageTestBasicContext;
@@ -15,6 +16,7 @@ public class MyTestSuite {
 	@BeforeClass
 	static public void setUp() throws Exception {
 		Configuration configuration = new Configuration();
+		configuration.setSelenium(new ChromeDriver());
 		configuration.setWicketFilterPrefix("");
 		WebPageTestBasicContext.beforePageTests(configuration);
 	}

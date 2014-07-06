@@ -17,18 +17,25 @@
 package com.ttdev.wicketpagetest;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
  * This class allows you to specify options to control the behavior of
  * {@link WebPageTestContext}. For example, by default it assumes that your web
  * content folder is src/main/webapp. If it is not the case, you must set the
- * {@link #docBase} property.
+ * {@link #docBase} property. Also, it uses Firefox by default. If you'd like to
+ * use another browser such as Chrome or IE, you need to set {@link #selenium}
+ * yourself.
  * 
  * @author Kent Tong
  * 
  */
 public class Configuration extends WebAppJettyConfiguration {
+	private static final String FIREFOX_DRIVER_FULL_NAME = "org.openqa.selenium.firefox.FirefoxDriver";
+
+	private static final String PROPERTY_KEY_WEBDRIVER_CLASS = "com.ttdev.wicketpagetest.webdriver.class";
+
 	/**
 	 * The URL prefix that maps to the Wicket filter (default: app).
 	 */
@@ -41,11 +48,6 @@ public class Configuration extends WebAppJettyConfiguration {
 	 */
 	private WebDriver selenium = null;
 
-	/**
-	 * The Selenium ({@link WebDriver}) subclass.
-	 */
-	private Class<? extends WebDriver> driverClass = FirefoxDriver.class;
-
 	public String getWicketFilterPrefix() {
 		return wicketFilterPrefix;
 	}
@@ -55,15 +57,20 @@ public class Configuration extends WebAppJettyConfiguration {
 	}
 
 	/**
-	 * Get the {@link #selenium} field if it is non-null. Otherwise, create a
-	 * new instance from the {@link #driverClass} and store it into the field.
+	 * Get the {@link #selenium} field if it is non-null. Otherwise, try to use
+	 * the value of the system property {@link #PROPERTY_KEY_WEBDRIVER_CLASS} as
+	 * the class of the driver to create a new instance and store it into the
+	 * field. If there is no such system property, use the Firefox driver.
 	 * 
 	 * @return the Selenium ({@link WebDriver}) object
 	 */
 	public WebDriver getSelenium() {
 		if (selenium == null) {
 			try {
-				selenium = driverClass.newInstance();
+				String className = System.getProperty(
+						PROPERTY_KEY_WEBDRIVER_CLASS, FIREFOX_DRIVER_FULL_NAME);
+				Class<?> driverClass = Class.forName(className);
+				selenium = (WebDriver) driverClass.newInstance();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

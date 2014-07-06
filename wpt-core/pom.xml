@@ -10,7 +10,7 @@
 	<artifactId>wpt-core</artifactId>
 	<version>${wpt.version}</version>
 	<properties>
-	    <jetty.version>7.1.6.v20100715</jetty.version>
+		<jetty.version>7.1.6.v20100715</jetty.version>
 	</properties>
 	<name>wpt-core</name>
 	<dependencies>
@@ -29,20 +29,20 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>2.11.0</version>
+			<version>2.31.0</version>
+			<exclusions>
+				<!-- as we're specifying our jetty version below, must exclude it here 
+					to avoid conflict -->
+				<exclusion>
+					<artifactId>jetty-websocket</artifactId>
+					<groupId>org.eclipse.jetty</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		<!-- 
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<version>7.1.6.v20100715</version>
-		</dependency>
-		 -->
-				<dependency>
 			<groupId>org.eclipse.jetty.aggregate</groupId>
 			<artifactId>jetty-all-server</artifactId>
-			<version>7.5.0.v20110901</version>
+			<version>8.1.9.v20130131</version>
 		</dependency>
-		
 	</dependencies>
 </project>
