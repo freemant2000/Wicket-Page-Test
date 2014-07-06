@@ -72,13 +72,6 @@ How to use
 			<version>5.13.1</version>
 		</dependency>
 	</dependencies>
-	...
-	<repositories>
-		<repository>
-			<id>wpt-release</id>
-			<url>http://wicketpagetest.sourceforge.net/m2-repo/releases</url>
-		</repository>
-	</repositories>
 </project>
 +----+
 
@@ -206,9 +199,24 @@ public class PageContainingFormTest {
 	</test>
 </suite>
 +----+
+
+  Set up Chrome
+
+  [[1]] Make sure you have Chrome installed (the version directly from Google).
   
-  Run that suite (make sure you have Firefox installed as by default Selenium 2 uses
-  Firefox as the web driver. If you don't, {{{./htmlunit.html} use the HtmlUnit web driver}}). It should pass. If it doesn't
+  [[2]] Download the latest version of the Chrome Driver  
+  {{{http://chromedriver.storage.googleapis.com} here}}. It is just a single executable
+  file (e.g., chromedriver.exe). Let's say you have put it into the c:\browser-drivers folder.
+  
+  [[3]] In Eclipse, choose Run | Run Configurations, create a new configuration, choose 
+  that TestNG XML file and then set the following VM arguments: 
+  
++----+
+  -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver
+  -Dwebdriver.chrome.driver=c:\browser-drivers\chromedriver.exe
++----+
+
+  [[4]] Click Run. The test should pass. If it doesn't
   work, post to {{{http://sourceforge.net/projects/wicketpagetest/forums/forum/1037966} 
   our support forum}} or the 
   {{{http://old.nabble.com/Wicket---User-f25133.html} Wicket user mailing list}}.
@@ -245,8 +253,9 @@ Going further
   * {{{./changeresistantmock.html} How to create 
   mocks easily that will be resistant to changes to the service interface}}
 
-  * {{{./htmlunit.html} Running tests without a browser}}
-  
+  * {{{./browser.html} Running tests with another browser (e.g., Firefox)}} or 
+  {{{./htmlunit.html} without a browser at all}}
+ 
   * {{{./manualtest.html} Support for manual testing}}
 
 Keep informed of updates

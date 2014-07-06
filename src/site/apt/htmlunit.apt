@@ -6,7 +6,7 @@
 Using HtmlUnit (headless, simulated browser) with Wicket Page Test
 
   If you're concerned that launching a browser would be too slow, you can use the HtmlUnit
-  web driver instead of the Firefox web driver. To do that, create a class to wrap around 
+  web driver instead of the Chrome/Firefox web driver. To do that, create a class to wrap around 
   the WebPageTestContext class. This class will specify the web driver instance to use:
 
 +----+
