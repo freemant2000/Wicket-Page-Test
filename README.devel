@@ -1,0 +1,11 @@
+To build it with Maven, do something like:
+
+mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
+    -Dwebdriver.chrome.driver=/home/kent/browser-drivers/
+    package
+
+To deploy a snapshot to sonatype:
+
+mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
+    -Dwebdriver.chrome.driver=/home/kent/browser-drivers/chromedriver \
+    clean deploy

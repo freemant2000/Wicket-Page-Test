@@ -1,0 +1,54 @@
+		------
+		Testing with different browsers
+		------
+		Kent Tong
+
+Using Chrome
+
+  Make sure you have Chrome installed (the version directly from Google).
+  
+  Download the latest version of the Chrome Driver  
+  {{{http://chromedriver.storage.googleapis.com} here}}. It is just a single executable
+  file (e.g., chromedriver.exe). Let's say you have put it into the c:\browser-drivers folder.
+  
+  Before running the test case, set a system property to tell Wicket Page Test to
+  use the Chrome Driver and the full path to the driver. For example, in Eclipse in the 
+  Run Configuration, set the properties with VM arguments: 
+  
++----+
+  -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver
+  -Dwebdriver.chrome.driver=c:\browser-drivers\chromedriver.exe
++----+
+
+  With Maven, run it like:
+   
++----+
+  mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
+      -Dwebdriver.chrome.driver=c:\browser-drivers\chromedriver.exe \ 
+      install
++----+
+
+Using Firefox
+
+  It is unfortunate that the Firefox driver in Selenium (v2.31.0) doesn't work with
+  the Firefox 20 or later (at the time of this writing, it is at 29). So, you must
+  use an older version.
+  
+  To do that, download {{{https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/19.0.2} 
+  Firefox 19}}. Unpack it into, say, c:\firefox-19. Set the properties like: 
+
++----+
+  -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.firefox.FirefoxDriver
+  -Dwebdriver.firefox.bin=c:\firefox-19\firefox.exe
++----+
+
+  With Maven, run it like:
+   
++----+
+  mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.firefox.FirefoxDriver \
+      -Dwebdriver.firefox.bin=c:\firefox-19\firefox.exe \ 
+      install
++----+
+
+
+  
