@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<artifactId>oss-parent</artifactId>
-		<groupId>org.sonatype.oss</groupId>
-		<version>7</version>
-	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ttdev</groupId>
 	<artifactId>wicket-page-test</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0.0</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<name>wicket-page-test</name>
 	<url>http://wicketpagetest.sourceforge.net</url>
 	<properties>
-		<wpt.version>3.0.0</wpt.version>
+		<wpt.version>3.0.0-SNAPSHOT</wpt.version>
 		<wicket.version>6.4.0</wicket.version>
 		<slf4j.version>1.6.2</slf4j.version>
 	</properties>
@@ -187,8 +182,14 @@
 		<url>https://sourceforge.net/tracker/?group_id=287085&amp;atid=1216366</url>
 	</issueManagement>
 	<distributionManagement>
+		<repository>
+			<id>ossrh</id>
+			<name>ossrh release repo</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
 		<snapshotRepository>
 			<id>ossrh</id>
+			<name>ossrh snapshot repo</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>

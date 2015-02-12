@@ -144,6 +144,6 @@ public class ByWicketIdPathFastVersion extends By {
 
 	@Override
 	public String toString() {
-		return ByWicketIdPathFastVersion.class.getSimpleName() + ": " + path;
+		return getClass().getSimpleName() + ": " + path;
 	}
 }

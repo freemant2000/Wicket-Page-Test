@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>wicket-page-test</artifactId>
 		<groupId>com.ttdev</groupId>
-		<version>3.0.0</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>com.ttdev</groupId>
 	<artifactId>wpt-sample-cdi</artifactId>
