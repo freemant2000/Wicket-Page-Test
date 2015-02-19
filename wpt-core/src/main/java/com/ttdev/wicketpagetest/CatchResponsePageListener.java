@@ -18,8 +18,8 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
  * To avoid looping, an instance is meant to catch the response page only once.
  * To avoid catching the wrong thing, you should specify the class of the page
  * you're expecting. If you're expecting something more special, you can
- * override the {@link #isWaitingFor()} (for something not a page) or
- * {@link #isWaitingForPage()} (for a page but not defined by page class).
+ * override the {@link #isWaitingFor(IRequestHandler)} (for something not a page) or
+ * {@link #isWaitingForPage(IRequestHandler)} (for a page but not defined by page class).
  * <p>
  * See {@link IRequestCycleListener} to see how to install the listener.
  * 
@@ -69,6 +69,7 @@ public class CatchResponsePageListener extends AbstractRequestCycleListener {
 	 * 
 	 * @param handler
 	 *            the handler being checked
+	 * @return true if the handler is what you're waiting for.
 	 */
 	protected boolean isWaitingFor(IRequestHandler handler) {
 		return pageClassExpected != null && isWaitingForPage(handler);
@@ -80,6 +81,8 @@ public class CatchResponsePageListener extends AbstractRequestCycleListener {
 	 * 
 	 * @param handler
 	 *            the handler being checked
+	 * @return true if the handler is a page render handler belonging to the
+	 *         specified page class.
 	 */
 	protected boolean isWaitingForPage(IRequestHandler handler) {
 		IRequestablePage page = getPageToRender(handler);

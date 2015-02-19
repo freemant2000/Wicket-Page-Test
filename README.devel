@@ -9,3 +9,33 @@ To deploy a snapshot to sonatype:
 mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
     -Dwebdriver.chrome.driver=/home/kent/browser-drivers/chromedriver \
     clean deploy
+
+To deploy a release to sonatype:
+
+Edit pom.xml to set the version:
+
+		<wpt.version>3.0.0</wpt.version>
+		
+mvn versions:set -DnewVersion=3.0.0
+
+mvn versions:commit
+    
+mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
+    -Dwebdriver.chrome.driver=/home/kent/browser-drivers/chromedriver \
+    -Dgpg.passphrase=<GPG-SIGNING-KEY-PASSPHRASE> \
+    clean deploy -P release
+
+Go to https://oss.sonatype.org, close and then release it. 
+    
+Release on sourceforge:
+ 
+1) set the spring example war as the default download:
+
+Use Project Admin | File Manager to mark it as the default download.
+
+if the above doesn't work, close the shell and create a new one. Or, use the 
+web GUI to upload it and mark it as the default.
+
+2) update change log on wiki.
+3) add a new artifact group in tracker.
+4) email announcement.

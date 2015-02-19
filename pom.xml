@@ -5,11 +5,12 @@
 	<groupId>com.ttdev</groupId>
 	<artifactId>wicket-page-test</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>3.0.0</version>
 	<name>wicket-page-test</name>
+	<description>A lightweight unit testing framework for Apache Wicket</description>
 	<url>http://wicketpagetest.sourceforge.net</url>
 	<properties>
-		<wpt.version>3.0.0-SNAPSHOT</wpt.version>
+		<wpt.version>3.0.0</wpt.version>
 		<wicket.version>6.4.0</wicket.version>
 		<slf4j.version>1.6.2</slf4j.version>
 	</properties>
@@ -54,6 +55,22 @@
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<keyname>ED842307</keyname>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

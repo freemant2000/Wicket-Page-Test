@@ -21,7 +21,7 @@ import net.sf.cglib.proxy.NoOp;
  * generated) is an inner class of an outer class (your unit test class) so the
  * instance will have access to the outer instance.
  * <p>
- * See {@link ChangeResistantMockFactoryTest} for how to use.
+ * See ChangeResistantMockFactoryTest for how to use.
  * 
  * @author Kent Tong
  * 
