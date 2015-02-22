@@ -1,16 +1,21 @@
+To build
+========
+
 To build it with Maven, do something like:
 
 mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
     -Dwebdriver.chrome.driver=/home/kent/browser-drivers/
     package
 
-To deploy a snapshot to sonatype:
+To deploy a snapshot to sonatype
+================================
 
 mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
     -Dwebdriver.chrome.driver=/home/kent/browser-drivers/chromedriver \
     clean deploy
 
-To deploy a release to sonatype:
+To deploy a release to sonatype
+===============================
 
 Edit pom.xml to set the version:
 
@@ -27,8 +32,9 @@ mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.Chrome
 
 Go to https://oss.sonatype.org, close and then release it. 
     
-Release on sourceforge:
- 
+Release on sourceforge
+====================== 
+
 1) set the spring example war as the default download:
 
 Use Project Admin | File Manager to mark it as the default download.
@@ -39,3 +45,13 @@ web GUI to upload it and mark it as the default.
 2) update change log on wiki.
 3) add a new artifact group in tracker.
 4) email announcement.
+
+
+To deploy the website
+=====================
+
+1) mvn site:site
+
+2) ssh -t freemant,wicketpagetest@shell.sourceforge.net create
+
+3) rsync -azv ~/git/Wicket-Page-Test/target/site/ freemant,wicketpagetest@shell.sourceforge.net:/home/project-web/wicketpagetest/htdocs

@@ -46,7 +46,7 @@
 		</menu>
 		<menu name="Support">
 			<item name="Wiki"
-				href="http://sourceforge.net/apps/mediawiki/wicketpagetest/index.php?title=Main_Page" />
+				href="https://sourceforge.net/p/wicketpagetest/wiki" />
 			<item name="Contact"
 				href="https://sourceforge.net/projects/wicketpagetest/support" />
 		</menu>
