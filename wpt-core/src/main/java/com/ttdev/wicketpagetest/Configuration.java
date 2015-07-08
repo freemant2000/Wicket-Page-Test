@@ -19,6 +19,8 @@ package com.ttdev.wicketpagetest;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class allows you to specify options to control the behavior of
@@ -32,6 +34,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  * 
  */
 public class Configuration extends WebAppJettyConfiguration {
+	private static Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
+
 	private static final String FIREFOX_DRIVER_FULL_NAME = "org.openqa.selenium.firefox.FirefoxDriver";
 
 	private static final String PROPERTY_KEY_WEBDRIVER_CLASS = "com.ttdev.wicketpagetest.webdriver.class";
@@ -69,6 +73,7 @@ public class Configuration extends WebAppJettyConfiguration {
 			try {
 				String className = System.getProperty(
 						PROPERTY_KEY_WEBDRIVER_CLASS, FIREFOX_DRIVER_FULL_NAME);
+				LOGGER.info("Loading class as webdriver: {}", className);
 				Class<?> driverClass = Class.forName(className);
 				selenium = (WebDriver) driverClass.newInstance();
 			} catch (Exception e) {

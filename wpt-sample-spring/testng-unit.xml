@@ -17,7 +17,7 @@
 	<test verbose="2" name="tests" annotations="JDK">
 		<classes>
 		    <class name="com.ttdev.wicketpagetest.sample.spring.TestFixture"></class>
-			<class name="com.ttdev.wicketpagetest.sample.spring.PageExtractedByWicketIdsTest"></class>
+			<class name="com.ttdev.wicketpagetest.sample.spring.PageContainingFormTest"></class>
 		</classes>
 	</test>
 </suite>

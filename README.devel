@@ -4,7 +4,7 @@ To build
 To build it with Maven, do something like:
 
 mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
-    -Dwebdriver.chrome.driver=/home/kent/browser-drivers/
+    -Dwebdriver.chrome.driver=/home/kent/browser-drivers/chromedriver \
     package
 
 To deploy a snapshot to sonatype
@@ -12,6 +12,7 @@ To deploy a snapshot to sonatype
 
 mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
     -Dwebdriver.chrome.driver=/home/kent/browser-drivers/chromedriver \
+    -Dgpg.passphrase=<GPG-SIGNING-KEY-PASSPHRASE> \
     clean deploy
 
 To deploy a release to sonatype

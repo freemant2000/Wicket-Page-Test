@@ -16,6 +16,9 @@
 
 package com.ttdev.wicketpagetest;
 
+import java.lang.reflect.Method;
+
+import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
@@ -40,7 +43,22 @@ public class WicketAppJettyLauncher extends WebAppJettyLauncher {
 	}
 
 	private void enableOutputWicketPath() {
-		getApplication().getDebugSettings().setOutputComponentPath(true);
+		try {
+			// Wicket 6 uses IDebugSettings but Wicket 7 uses DebugSettings.
+			// in order to be compatible with both, call the methods using
+			// reflection.
+			// TODO: when Wicket 6 is no longer supported, change it back to:
+			// getApplication().getDebugSettings().setComponentPathAttributeName("wicketpath");
+			Method getDebugSettings = Application.class.getMethod(
+					"getDebugSettings", new Class[] {});
+			Object debugSettings = getDebugSettings.invoke(getApplication(),
+					new Object[] {});
+			Method setOutputComponentPath = debugSettings.getClass().getMethod(
+					"setOutputComponentPath", new Class[] { boolean.class });
+			setOutputComponentPath.invoke(debugSettings, true);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void waitForApplication() {
