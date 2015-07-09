@@ -59,7 +59,7 @@ public class GreetingPanelTest {
 
   By the way, you can specify how your Component is constructed in the implementation
   of the ComponnentFactory passed to ws.openComponent too. Thus, testing stateful
-  Components is quite easy and strait forward  
+  Components is quite easy and straight forward.  
 
 The first step to unit test Bread Crumbs
 

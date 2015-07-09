@@ -11,10 +11,10 @@
 	<url>http://wicketpagetest.sourceforge.net</url>
 	<properties>
 		<wpt.version>3.0.1-SNAPSHOT</wpt.version>
-		<wicket.version>7.0.0-M6</wicket.version>
 		<!-- 
-		<wicket.version>6.4.0</wicket.version>
+		<wicket.version>7.0.0-M6</wicket.version>
 		 -->
+		<wicket.version>6.4.0</wicket.version>
 		<slf4j.version>1.6.2</slf4j.version>
 	</properties>
 	<build>

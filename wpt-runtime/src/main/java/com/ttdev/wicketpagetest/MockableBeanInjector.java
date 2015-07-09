@@ -62,8 +62,14 @@ public class MockableBeanInjector extends Injector implements
 	}
 
 	private static MockedBeanFieldValueFactory getMockedBeanFactory() {
-		MockableBeanInjector injector = (MockableBeanInjector) Injector.get();
-		return injector.mockedBeansFactory;
+		Injector injector = Injector.get();
+		if (injector == null || !(injector instanceof MockableBeanInjector)) {
+			throw new RuntimeException(
+					"You must call MockableBeanInjector.installInjector() "
+							+ "in your WebApplication's init()");
+		}
+		MockableBeanInjector mbInjector = (MockableBeanInjector) injector;
+		return mbInjector.mockedBeansFactory;
 	}
 
 	/**
@@ -95,7 +101,8 @@ public class MockableBeanInjector extends Injector implements
 	@Override
 	public void inject(Object object) {
 		injectMocks(object);
-		// The orginalInjector will inject a bean into the fields that are not null.
+		// The orginalInjector will inject a bean into the fields that are not
+		// null.
 		// So, if a mocked object has been injected in the previous step, the
 		// injector won't touch it.
 		injectOriginals(object);

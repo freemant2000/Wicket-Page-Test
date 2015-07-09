@@ -46,8 +46,8 @@ public class AjaxPage extends WebPage {
 +----+
 
   To test it, as usual, you will mock the service. Here, you just increment the number. To test 
-  the AJAX effect, you wait until the AJAX processing is completed and then check
-  the result:
+  the AJAX effect, you first install a listener for the AJAX completion (only need to do it once
+  per page) and then wait until it happens and then check the result:
 
 +----+
 @Test
@@ -61,13 +61,14 @@ public class AjaxPageTest {
 		});
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(AjaxPage.class);
+		ws.subscribeAjaxDoneHandler(); // install the AJAX completion listener
 		WebElement output = ws.findElement(By.id("output"));
 		assert output.getText().equals("Current: 0");
 		ws.findElement(By.linkText("Calculate next")).click(); // ajax call
-		ws.waitUntilAjaxDone(); // this is the key step
+		ws.waitUntilAjaxDone(); // wait for the completion
 		assert output.getText().equals("Current: 1");
 		ws.findElement(By.linkText("Calculate next")).click(); // ajax call
-		ws.waitUntilAjaxDone(); // this is the key step
+		ws.waitUntilAjaxDone(); // wait for the completion
 		assert output.getText().equals("Current: 2");
 	}
 

@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-cdi</artifactId>
-			<version>6.4.0</version>
+			<version>${wicket.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
