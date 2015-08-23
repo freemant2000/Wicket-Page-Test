@@ -17,6 +17,7 @@
 package com.ttdev.wicketpagetest.sample.spring;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 import com.ttdev.wicketpagetest.MockableSpringBeanInjector;
@@ -41,6 +42,7 @@ public class PageContainingFormTest {
 		ws.openBookmarkablePage(PageContainingForm.class);
 		assert ws.getValue(By.name("input")).equals("xyz");
 		ws.click(By.xpath("//input[@type='submit']"));
+		ws.waitUntilDomReady(); // needed only if response page is same page
 		assert ws.getText(By.id("result")).equals("xyzxyz");
 	}
 
@@ -52,6 +54,7 @@ public class PageContainingFormTest {
 		ws.openHomePage();
 		assert ws.getValue(By.name("input")).equals("abc");
 		ws.click(By.xpath("//input[@type='submit']"));
+		ws.waitUntilDomReady();
 		assert ws.getText(By.id("result")).equals("ABC");
 	}
 }

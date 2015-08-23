@@ -42,8 +42,7 @@ public class PageContainingFormTest {
 		SerializableProxyFactory factory = new SerializableProxyFactory();
 		MyService proxyService = factory.createProxy(MyService.class,
 				mockService);
-		// launch Jetty, your webapp and Selenium web driver (by default
-		// Firefox)
+		// get access to the Selenium web driver to control the browser
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		// open your page and pass the proxy as the constructor argument
 		ws.openNonBookmarkablePage(PageContainingForm.class, proxyService);
@@ -52,6 +51,10 @@ public class PageContainingFormTest {
 		assert ws.getValue(By.name("input")).equals("xyz");
 		// click the <input> HTML element whose attribute type="submit"
 		ws.click(By.xpath("//input[@type='submit']"));
+		// wait until DOM is ready. This is needed only if the response page 
+		// is same Wicket page. If the response is another page, just try to 
+		// locate the element and Selenium will wait for it.
+		ws.waitUntilDomReady();
 		// check if the HTML element with attribute id="result" has the body
 		// text "xyzxyz"
 		assert ws.getText(By.id("result")).equals("xyzxyz");

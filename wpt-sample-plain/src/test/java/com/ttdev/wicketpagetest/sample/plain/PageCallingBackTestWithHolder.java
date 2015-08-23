@@ -57,6 +57,7 @@ public class PageCallingBackTestWithHolder {
 		ws.openBookmarkablePage(MyPageCallingBack.class);
 		ws.sendKeys(By.name("input"), "abc");
 		ws.click(By.xpath("//input[@type='submit']"));
+		ws.waitUntilDomReady();
 		// check if the correct data was passed to the callback
 		assert input.equals("abc");
 	}

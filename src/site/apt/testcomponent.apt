@@ -44,14 +44,13 @@ public class GreetingPanelTest {
 				return "Peter";
 			}
 		});
-		DefaultSelenium selenium = WebPageTestContext.getSelenium();
-		WicketSelenium ws = new WicketSelenium(selenium);
+		WicketSeleniumDriver ws = WebPageTestContext.getWicketSelenium();
 		ws.openComponent(new ComponentFactory() {
 			public Component createComponent(String id) {
 				return new GreetingPanel(id);
 			}
 		});
-		assert selenium.getText("wicket=//name").equals("Peter");
+		assert ws.getText("//name").equals("Peter");
 		assert log.toString().equals("c");
 	}
 }

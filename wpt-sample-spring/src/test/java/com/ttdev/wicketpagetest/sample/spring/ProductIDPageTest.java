@@ -51,6 +51,7 @@ public class ProductIDPageTest {
 		ws.openBookmarkablePage(ProductIDPage.class);
 		ws.findElement(By.name("productID")).sendKeys("p123");
 		ws.click(By.xpath("//input[@type='submit']"));
+		ws.waitUntilDomReady();
 		// check the page caught
 		ProductDetailsPage p = (ProductDetailsPage) listener.getPageCaught();
 		assert p.getProductID().equals("p123");

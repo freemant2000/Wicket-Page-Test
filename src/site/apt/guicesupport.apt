@@ -106,13 +106,12 @@ public class Page1Test {
 			}
 
 		});
-		DefaultSelenium selenium = WebPageTestContext.getSelenium();
-		WicketSelenium ws = new WicketSelenium(selenium);
+		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(Page1.class);
-		assert selenium.getValue("input").equals("xyz");
-		selenium.click("//input[@type='submit']");
-		selenium.waitForPageToLoad("3000");
-		assert selenium.getText("result").equals("xyzxyz");
+		assert ws.getValue(By.name("input")).equals("xyz");
+		ws.click(By.xpath("//input[@type='submit']"));
+		ws.waitUntilDomReady();
+		assert ws.getText(By.id("result")).equals("xyzxyz");
 	}
 }
 +----+

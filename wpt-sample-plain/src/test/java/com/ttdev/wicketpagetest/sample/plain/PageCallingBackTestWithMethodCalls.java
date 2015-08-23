@@ -61,6 +61,7 @@ public class PageCallingBackTestWithMethodCalls {
 		ws.openBookmarkablePage(MyPageCallingBack.class);
 		ws.sendKeys(By.name("input"), "abc");
 		ws.click(By.xpath("//input[@type='submit']"));
+		ws.waitUntilDomReady();
 		assert input.equals("abc");
 	}
 }

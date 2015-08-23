@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
 import com.thoughtworks.selenium.Selenium;
@@ -27,13 +31,33 @@ import com.thoughtworks.selenium.Selenium;
  * @author Andy Chu
  */
 public class WicketSelenium {
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(WicketSelenium.class);
 	protected static final int AJAX_TIMEOUT_IN_SECONDS = 10;
+	protected static final int LOCATE_ELEMENT_TIMEOUT_IN_SECONDS = 3;
 	private WebDriver selenium;
 	private Configuration cfg;
 
 	public WicketSelenium(Configuration cfg, WebDriver selenium) {
 		this.selenium = selenium;
 		this.cfg = cfg;
+		// By default Wicket uses redirects for page navigation, but the
+		// Selenium's click() method doesn't wait for redirects. So,
+		// tell Selenium to wait some seconds if an element is not found.
+		// This will work if the response page is a different page so
+		// only it has that element.
+		//
+		// However, this won't solve the problem of
+		// StaleElementReferenceException where the old element is found on the
+		// existing page. This is possible if the same Wicket page is the
+		// response page. For that case you can use the waitUntilDomReady()
+		// method.
+		selenium.manage()
+				.timeouts()
+				.implicitlyWait(LOCATE_ELEMENT_TIMEOUT_IN_SECONDS,
+						TimeUnit.SECONDS);
+		LOGGER.info("Setting the implicit wait timeout to {}",
+				LOCATE_ELEMENT_TIMEOUT_IN_SECONDS);
 	}
 
 	public void subscribeAjaxDoneHandler() {
@@ -67,6 +91,28 @@ public class WicketSelenium {
 					}
 				});
 		clearAjaxDoneIndicator();
+	}
+
+	/**
+	 * It waits until the browser's DOM is ready. Usually you don't need to call
+	 * this because when you try to get an element and if it is not found,
+	 * Selenium has been configured to wait a few seconds. But if the response
+	 * page is the same as the original page, then it won't work as that element
+	 * will be found but when you try to use it, you will get an
+	 * StaleElementReferenceException. To work around the problem, call this
+	 * method.
+	 */
+	public void waitUntilDomReady() {
+		WebDriverWait wait = new WebDriverWait(selenium,
+				LOCATE_ELEMENT_TIMEOUT_IN_SECONDS);
+		wait.until(new Predicate<WebDriver>() {
+			public boolean apply(WebDriver input) {
+				JavascriptExecutor jsExec = (JavascriptExecutor) input;
+				String state = (String) jsExec
+						.executeScript("return document.readyState");
+				return state.equals("complete");
+			}
+		});
 	}
 
 	/**
