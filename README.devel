@@ -33,6 +33,11 @@ mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.Chrome
 
 Go to https://oss.sonatype.org, close and then release it. 
     
+Release the code on github
+==========================
+
+Create a release and then create a pull request.
+
 Release on sourceforge
 ====================== 
 

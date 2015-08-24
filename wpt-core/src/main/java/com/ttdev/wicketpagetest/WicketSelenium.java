@@ -107,6 +107,9 @@ public class WicketSelenium {
 	 * response page, so that you can then call {@link #waitForMarkedPage()} to
 	 * wait for it. This way you can be sure that it is a new page and won't
 	 * suffer from the StaleElementReferenceException.
+	 * 
+	 * @param marker
+	 *            the marker to be used
 	 */
 	public void setResponsePageMarker(String marker) {
 		pageMarker = marker;
@@ -135,7 +138,7 @@ public class WicketSelenium {
 	 * But if the response page is the same as the original page, then it won't
 	 * work as that element will be found but when you try to use it, you will
 	 * get an StaleElementReferenceException. To work around the problem, call
-	 * {@link #setResponsePageMarker(String))} and then call this method.
+	 * {@link #setResponsePageMarker(String)} and then call this method.
 	 */
 	public void waitForMarkedPage() {
 		if (pageMarker == null) {

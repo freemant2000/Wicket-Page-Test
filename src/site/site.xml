@@ -39,7 +39,8 @@
 			<item name="Changing app configuration" href="./configuration.html" />
 			<item name="Creating mocks" href="./changeresistantmock.html" />
 			<item name="Manual testing" href="./manualtest.html" />
-		</menu>
+			<item name="Change log" href="./changelog.html" />
+					</menu>
 		<menu name="For older version users">
 			<item name="Upgrading to wpt 3.0" href="./upgrade.html" />
 			<item name="Doc for 1.x-2.x" href="./pre-v3/index.html" />

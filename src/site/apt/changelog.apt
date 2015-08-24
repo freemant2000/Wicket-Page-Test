@@ -1,0 +1,100 @@
+		------
+		Change log for Wicket Page Test
+		------
+		Kent Tong
+
+v3.0.1:
+
+  * Works with Wicket v7 (and v6).
+
+  * Can reliably wait for the loading of the response page.
+  
+v3.0.0:  
+
+  * No need to download and run the Selenium server as it has been completely eliminated.  
+
+  * No need to use Spring nor Guice.
+
+  * You can use HTMLUnit in place of a real browser. This may make the tests faster (or at least 
+    address some people's conception of Selenium being slow).
+
+  * No need to change your page's Java code to test page navigation. 
+
+  * It now works with Wicket 1.6.x.
+  
+v2.0.1
+
+  * It now works with Wicket 1.5-M3.
+  
+v2.0.0
+
+  * It now works with Wicket 1.5-M1.
+
+  * Created a branch named wicket-1.4 for Wicket Page Test 1.6.1 and onward.
+  
+v1.6.1
+
+  * Fixed issue 3043110.
+
+  * Fixed issue 3037392.
+
+  * Fixed issue 3037395.
+  
+v1.6
+
+  * Support manual testing: allow some things to be mocked, without starting Selenium.
+
+  * Include a factory to create change-resisting mocks.
+
+  * Fixed issue 3024401.
+
+  * Fixed issue 3008847.
+
+  * Fixed issue 3008846.
+
+v1.5.1
+
+  * Fixed issue 3003067.
+
+v1.5
+
+  * Start the Selenium server automatically.
+
+  * Support JUnit4 in addition to TestNG.
+
+  * Support unit testing the navigation within the Breadcrumb subsystem
+
+  * Open a Component in a page for unit testing
+
+  * Fixed issue 2998400.
+
+v1.4
+
+  * Provide a super easy way to locate a DOM element with the Wicket ID.
+
+v1.3
+
+  * Provide a generic starter page to launch another page whose constructor needs some arguments.
+
+  * Provide a page navigator to inspect the arguments passed to the response page.
+
+  * Easier way to open a page.
+
+  * Now you can use Spring 3 without the need to exclude the Spring 2.0 dependency from wpt-runtime-spring.
+
+v1.2
+
+  * Wait for the completion of Ajax easily, without writing any Javascript.
+
+v1.1.1
+
+  * Fix a bug with inherited @Inject.
+
+v1.1
+
+  * Support Guice in addition to Spring.
+
+v1.0
+
+  * Initial release.
+    

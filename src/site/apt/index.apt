@@ -13,16 +13,15 @@ Introduction
   The startup only takes a few seconds. If you run multiple tests together (as a test suite), the 
   startup will occur only once, so it is pretty fast.
   
-  Major enhancements introduced in v3:
+  Major enhancements introduced in v3.0.1:
 
-  * No need to download and run the Selenium server as it has been completely eliminated.  
+  * Works with Wicket v7 (and v6).
 
-  * No need to use Spring nor Guice.
-  
-  * You can use HTMLUnit in place of a real browser. This may make the tests faster (or at least 
-    address some people's conception of Selenium being slow).
-  
-  * No need to change your page's Java code to test page navigation. 
+  * Can reliably wait for the loading of the response page.
+
+  []
+
+  See the {{{./changelog.html} change log}} for more details.
 
 Why is it useful?
 
