@@ -40,7 +40,7 @@ public class WicketSeleniumDriver extends WicketSelenium {
 
 	public void wait(ExpectedCondition<?> condition) {
 		try {
-			new WebDriverWait(getSelenium(), AJAX_TIMEOUT_IN_SECONDS)
+			new WebDriverWait(getSelenium(), WAIT_TIMEOUT_IN_SECONDS)
 					.until(condition);
 		} catch (StaleElementReferenceException e) {
 			// NOTE: wait for the latest page for StaleElementReferenceException

@@ -49,12 +49,15 @@ public class PageContainingFormTest {
 		// check if the HTML element with attribute name="input" has a value of
 		// "xyz"
 		assert ws.getValue(By.name("input")).equals("xyz");
+		// tell the server side to include a marker cookie in the next page
+		// response. This is needed only if the response page is same Wicket 
+		// page. If the response is another page, just try to locate the 
+		// element and Selenium will wait for it.
+		ws.setResponsePageMarker();
 		// click the <input> HTML element whose attribute type="submit"
 		ws.click(By.xpath("//input[@type='submit']"));
-		// wait until DOM is ready. This is needed only if the response page 
-		// is same Wicket page. If the response is another page, just try to 
-		// locate the element and Selenium will wait for it.
-		ws.waitUntilDomReady();
+		// wait for the page with such a marker
+		ws.waitForMarkedPage();
 		// check if the HTML element with attribute id="result" has the body
 		// text "xyzxyz"
 		assert ws.getText(By.id("result")).equals("xyzxyz");

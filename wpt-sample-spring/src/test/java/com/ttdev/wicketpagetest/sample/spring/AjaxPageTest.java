@@ -30,7 +30,7 @@ public class AjaxPageTest {
 		MockableSpringBeanInjector.mockBean("service", new CalcService() {
 
 			public int calcNext(int current) {
-				return current + 1;
+				return current + 1; 
 			}
 		});
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();

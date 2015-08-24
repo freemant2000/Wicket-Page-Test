@@ -24,6 +24,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+
 public class PageContainingForm extends WebPage {
 	private static final long serialVersionUID = 1L;
 	@SpringBean

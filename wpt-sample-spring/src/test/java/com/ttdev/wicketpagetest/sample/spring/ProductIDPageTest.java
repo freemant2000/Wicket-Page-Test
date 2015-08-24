@@ -17,43 +17,41 @@
 package com.ttdev.wicketpagetest.sample.spring;
 
 import org.openqa.selenium.By;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.ttdev.wicketpagetest.CatchResponsePageListener;
 import com.ttdev.wicketpagetest.WebPageTestContext;
 import com.ttdev.wicketpagetest.WicketSelenium;
 
-@Test
 public class ProductIDPageTest {
 
-	private CatchResponsePageListener listener;
-
-	@BeforeMethod
 	public void catchResponsePage() {
 		MyApp app = (MyApp) WebPageTestContext.getWebApplication();
-		// key step: this listener will try to catch a response page
-		// belonging to the ProductDetailsPage class. It will catch it
-		// then schedule a dummy page (basically empty).
-		listener = new CatchResponsePageListener(ProductDetailsPage.class);
-		app.getRequestCycleListeners().add(listener);
+		// expect a response page of the ProductDetailsPage class.
+		app.getCrpl().setPageClassExpected(ProductDetailsPage.class);
 	}
 
-	@AfterMethod
 	public void stopCatchingResponsePage() {
 		MyApp app = (MyApp) WebPageTestContext.getWebApplication();
-		app.getRequestCycleListeners().remove(listener);
+		app.getCrpl().setPageClassExpected(null);
 	}
 
+	@Test
 	public void testProvidingCorrectProductID() {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(ProductIDPage.class);
 		ws.findElement(By.name("productID")).sendKeys("p123");
-		ws.click(By.xpath("//input[@type='submit']"));
-		ws.waitUntilDomReady();
+		ws.setResponsePageMarker();
+		catchResponsePage();
+		try {
+			ws.click(By.xpath("//input[@type='submit']"));
+			ws.waitForMarkedPage();
+		} finally {
+			stopCatchingResponsePage();
+		}
 		// check the page caught
-		ProductDetailsPage p = (ProductDetailsPage) listener.getPageCaught();
+		MyApp app = (MyApp) WebPageTestContext.getWebApplication();
+		ProductDetailsPage p = (ProductDetailsPage) app.getCrpl()
+				.getPageCaught();
 		assert p.getProductID().equals("p123");
 	}
 }

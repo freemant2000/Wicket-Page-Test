@@ -23,5 +23,4 @@ public interface MyService {
 
 	String getResult(String input);
 
-
 }

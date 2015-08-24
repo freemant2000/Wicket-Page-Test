@@ -4,6 +4,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 
 import com.ttdev.wicketpagetest.MockableCDIBeanInjector;
+import com.ttdev.wicketpagetest.PageMarkingListener;
 
 public class MyApp extends WebApplication {
 
@@ -16,5 +17,6 @@ public class MyApp extends WebApplication {
 	protected void init() {
 		super.init();
 		MockableCDIBeanInjector.installInjector(this);
+		getRequestCycleListeners().add(new PageMarkingListener());
 	}
 }

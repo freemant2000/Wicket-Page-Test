@@ -59,8 +59,7 @@ public class PalettePageTest {
 		assert allProducts.get(1).getText().equals("eraser");
 		assert allProducts.get(2).getText().equals("paper clip");
 		leftSelect.selectByVisibleText("eraser");
-		ws.click("//addButton");
-		ws.waitUntilDomReady();
+		ws.click("//addButton"); //it is done with js
 		leftSelect = new Select(ws.findWicketElement("//choices"));
 		allProducts = leftSelect.getOptions();
 		assert allProducts.size() == 2;
@@ -70,8 +69,9 @@ public class PalettePageTest {
 		List<WebElement> selectedProducts = rightSelect.getOptions();
 		assert selectedProducts.size() == 1;
 		assert selectedProducts.get(0).getText().equals("eraser");
+		ws.setResponsePageMarker();
 		ws.click(By.xpath("//input[@value='OK']"));
-		ws.waitUntilDomReady();
+		ws.waitForMarkedPage();
 		assert deleted.getId() == 1L;
 		assert deleted.getName().equals("eraser");
 	}

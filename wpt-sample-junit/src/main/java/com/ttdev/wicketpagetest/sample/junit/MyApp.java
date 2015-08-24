@@ -19,6 +19,7 @@ package com.ttdev.wicketpagetest.sample.junit;
 import org.apache.wicket.protocol.http.WebApplication;
 
 import com.ttdev.wicketpagetest.MockableSpringBeanInjector;
+import com.ttdev.wicketpagetest.PageMarkingListener;
 
 public class MyApp extends WebApplication {
 	
@@ -31,6 +32,7 @@ public class MyApp extends WebApplication {
 	protected void init() {
 		super.init();
 		MockableSpringBeanInjector.installInjector(this);
+		getRequestCycleListeners().add(new PageMarkingListener());
 		mountPage("/mount", MountPage.class);
 		mountPage("/mount2", MountPage2.class);
 	}

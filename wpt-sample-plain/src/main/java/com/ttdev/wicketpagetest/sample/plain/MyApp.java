@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 
 import com.ttdev.wicketpagetest.MockableBeanInjector;
+import com.ttdev.wicketpagetest.PageMarkingListener;
 
 public class MyApp extends WebApplication {
 
@@ -30,7 +31,9 @@ public class MyApp extends WebApplication {
 
 	@Override
 	protected void init() {
+		super.init();
 		MockableBeanInjector.installInjector(this, new MockableBeanInjector());
+		getRequestCycleListeners().add(new PageMarkingListener());
 	}
 
 }

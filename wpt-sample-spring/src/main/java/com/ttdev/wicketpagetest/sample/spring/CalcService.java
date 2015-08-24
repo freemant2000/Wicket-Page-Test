@@ -5,3 +5,4 @@ public interface CalcService {
 	int calcNext(int current);
 
 }
+ 

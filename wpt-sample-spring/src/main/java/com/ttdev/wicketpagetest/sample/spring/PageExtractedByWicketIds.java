@@ -34,7 +34,7 @@ public class PageExtractedByWicketIds extends WebPage {
 	private static final long serialVersionUID = 1L;
 	private Label totalLabel;
 	private List<Integer> values;
-
+ 
 	public PageExtractedByWicketIds() {
 		values = new ArrayList<Integer>();
 		values.add(3);

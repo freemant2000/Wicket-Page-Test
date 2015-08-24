@@ -41,8 +41,9 @@ public class PageContainingFormTest {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(PageContainingForm.class);
 		assert ws.getValue(By.name("input")).equals("xyz");
+		ws.setResponsePageMarker(); // needed only if response page is same page
 		ws.click(By.xpath("//input[@type='submit']"));
-		ws.waitUntilDomReady(); // needed only if response page is same page
+		ws.waitForMarkedPage();
 		assert ws.getText(By.id("result")).equals("xyzxyz");
 	}
 
@@ -53,8 +54,9 @@ public class PageContainingFormTest {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openHomePage();
 		assert ws.getValue(By.name("input")).equals("abc");
+		ws.setResponsePageMarker(); // needed only if response page is same page
 		ws.click(By.xpath("//input[@type='submit']"));
-		ws.waitUntilDomReady();
+		ws.waitForMarkedPage();
 		assert ws.getText(By.id("result")).equals("ABC");
 	}
 }

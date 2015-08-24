@@ -9,7 +9,7 @@ public class ProductDetailsPage extends WebPage {
 
 	public ProductDetailsPage(String productID) {
 		this.productID = productID;
-	}
+	} 
 
 	public String getProductID() {
 		return productID;

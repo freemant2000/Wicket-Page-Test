@@ -179,7 +179,6 @@ public class PalettePageTest {
 		assert allProducts.get(2).getText().equals("paper clip");
 		leftSelect.selectByVisibleText("eraser");
 		ws.click("//addButton");
-		ws.waitUntilDomReady();
 		leftSelect = new Select(ws.findWicketElement("//choices"));
 		allProducts = leftSelect.getOptions();
 		assert allProducts.size() == 2;
@@ -190,7 +189,6 @@ public class PalettePageTest {
 		assert selectedProducts.size() == 1;
 		assert selectedProducts.get(0).getText().equals("eraser");
 		ws.click(By.xpath("//input[@value='OK']"));
-		ws.waitUntilDomReady();
 		assert deleted.getId() == 1L;
 		assert deleted.getName().equals("eraser");
 	}

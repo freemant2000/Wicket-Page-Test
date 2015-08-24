@@ -43,39 +43,66 @@ public class ProductIDPage extends WebPage {
   page:
 
 +----+
-@Test
+public class MyApp extends WebApplication {
+	private CatchResponsePageListener crpl;
+
+	@Override
+	protected void init() {
+		super.init();
+		MockableSpringBeanInjector.installInjector(this);
+		getRequestCycleListeners().add(new PageMarkingListener());
+		// this listener will be used to catch a response page
+		// belonging to a certain class (specified in the test
+		// cases). Then it will schedule a dummy page (basically
+		// empty).
+		crpl = new CatchResponsePageListener();
+		getRequestCycleListeners().add(crpl);
+
+	}
+
+	public CatchResponsePageListener getCrpl() {
+		return crpl;
+	}
+}
++----+
+
+  However, to avoid catching a wrong page, in the test case, you need to specify 
+  the page class that you are expecting (otherwise it will do nothing):
+
++----+
 public class ProductIDPageTest {
 
-	private CatchResponsePageListener listener;
-
-	@BeforeMethod
 	public void catchResponsePage() {
 		MyApp app = (MyApp) WebPageTestContext.getWebApplication();
-		// key step: this listener will try to catch a response page
-		// belonging to the ProductDetailsPage class. It will catch it
-		// then schedule a dummy page (basically empty).
-		listener = new CatchResponsePageListener(ProductDetailsPage.class);
-		app.getRequestCycleListeners().add(listener);
+		// expect a response page of the ProductDetailsPage class.
+		app.getCrpl().setPageClassExpected(ProductDetailsPage.class);
 	}
 
-	@AfterMethod
 	public void stopCatchingResponsePage() {
 		MyApp app = (MyApp) WebPageTestContext.getWebApplication();
-		app.getRequestCycleListeners().remove(listener);
+		app.getCrpl().setPageClassExpected(null);
 	}
 
+	@Test
 	public void testProvidingCorrectProductID() {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(ProductIDPage.class);
 		ws.findElement(By.name("productID")).sendKeys("p123");
-		ws.click(By.xpath("//input[@type='submit']"));
-		ws.waitUntilDomReady();
+		ws.setResponsePageMarker();
+		catchResponsePage();
+		try {
+			ws.click(By.xpath("//input[@type='submit']"));
+			ws.waitForMarkedPage();
+		} finally {
+			stopCatchingResponsePage();
+		}
 		// check the page caught
-		ProductDetailsPage p = (ProductDetailsPage) listener.getPageCaught();
+		MyApp app = (MyApp) WebPageTestContext.getWebApplication();
+		ProductDetailsPage p = (ProductDetailsPage) app.getCrpl()
+				.getPageCaught();
 		assert p.getProductID().equals("p123");
 	}
 }
-
 +----+
 
 Testing a page that calls back
@@ -146,8 +173,9 @@ public class PageCallingBackTestWithHolder {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(MyPageCallingBack.class);
 		ws.sendKeys(By.name("input"), "abc");
+		ws.setResponsePageMarker(); 
 		ws.click(By.xpath("//input[@type='submit']"));
-		ws.waitUntilDomReady();
+		ws.waitForMarkedPage();
 		// check if the correct data was passed to the callback
 		assert input.equals("abc");
 	}
@@ -196,8 +224,9 @@ public class PageCallingBackTestWithMethodCalls {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(MyPageCallingBack.class);
 		ws.sendKeys(By.name("input"), "abc");
+		ws.setResponsePageMarker(); 
 		ws.click(By.xpath("//input[@type='submit']"));
-		ws.waitUntilDomReady();
+		ws.waitForMarkedPage();
 		assert input.equals("abc");
 	}
 }

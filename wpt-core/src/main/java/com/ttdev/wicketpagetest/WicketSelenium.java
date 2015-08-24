@@ -3,15 +3,18 @@ package com.ttdev.wicketpagetest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -33,31 +36,29 @@ import com.thoughtworks.selenium.Selenium;
 public class WicketSelenium {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(WicketSelenium.class);
-	protected static final int AJAX_TIMEOUT_IN_SECONDS = 10;
-	protected static final int LOCATE_ELEMENT_TIMEOUT_IN_SECONDS = 3;
+	protected static final int WAIT_TIMEOUT_IN_SECONDS = 10;
 	private WebDriver selenium;
 	private Configuration cfg;
+	private String pageMarker;
+	private Random randMarkerGenerator;
 
 	public WicketSelenium(Configuration cfg, WebDriver selenium) {
 		this.selenium = selenium;
 		this.cfg = cfg;
-		// By default Wicket uses redirects for page navigation, but the
-		// Selenium's click() method doesn't wait for redirects. So,
-		// tell Selenium to wait some seconds if an element is not found.
-		// This will work if the response page is a different page so
-		// only it has that element.
-		//
-		// However, this won't solve the problem of
-		// StaleElementReferenceException where the old element is found on the
-		// existing page. This is possible if the same Wicket page is the
-		// response page. For that case you can use the waitUntilDomReady()
-		// method.
-		selenium.manage()
-				.timeouts()
-				.implicitlyWait(LOCATE_ELEMENT_TIMEOUT_IN_SECONDS,
-						TimeUnit.SECONDS);
-		LOGGER.info("Setting the implicit wait timeout to {}",
-				LOCATE_ELEMENT_TIMEOUT_IN_SECONDS);
+		randMarkerGenerator = new Random();
+		configToWaitOnNotFound();
+	}
+
+	// By default Wicket uses redirects for page navigation, but the
+	// Selenium's click() method doesn't wait for redirects. So,
+	// tell Selenium to wait some seconds if an element is not found.
+	// This will work if the response page is a different page so
+	// only it has that element.
+	private void configToWaitOnNotFound() {
+		selenium.manage().timeouts()
+				.implicitlyWait(WAIT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
+		LOGGER.debug("Setting the implicit wait timeout to {}",
+				WAIT_TIMEOUT_IN_SECONDS);
 	}
 
 	public void subscribeAjaxDoneHandler() {
@@ -81,7 +82,7 @@ public class WicketSelenium {
 	 * and thus is subject to changes.
 	 */
 	public void waitUntilAjaxDone() {
-		new WebDriverWait(selenium, AJAX_TIMEOUT_IN_SECONDS)
+		new WebDriverWait(selenium, WAIT_TIMEOUT_IN_SECONDS)
 				.until(new Predicate<WebDriver>() {
 					public boolean apply(WebDriver input) {
 						JavascriptExecutor jsExec = (JavascriptExecutor) input;
@@ -94,25 +95,77 @@ public class WicketSelenium {
 	}
 
 	/**
-	 * It waits until the browser's DOM is ready. Usually you don't need to call
-	 * this because when you try to get an element and if it is not found,
-	 * Selenium has been configured to wait a few seconds. But if the response
-	 * page is the same as the original page, then it won't work as that element
-	 * will be found but when you try to use it, you will get an
-	 * StaleElementReferenceException. To work around the problem, call this
-	 * method.
+	 * It tells the server side to include a random string as the marker (a
+	 * cookie) in the response page. See {@link #setResponsePageMarker(String)}.
 	 */
-	public void waitUntilDomReady() {
-		WebDriverWait wait = new WebDriverWait(selenium,
-				LOCATE_ELEMENT_TIMEOUT_IN_SECONDS);
-		wait.until(new Predicate<WebDriver>() {
-			public boolean apply(WebDriver input) {
-				JavascriptExecutor jsExec = (JavascriptExecutor) input;
-				String state = (String) jsExec
-						.executeScript("return document.readyState");
-				return state.equals("complete");
+	public void setResponsePageMarker() {
+		setResponsePageMarker(Long.toString(randMarkerGenerator.nextLong()));
+	}
+
+	/**
+	 * It tells the server side to include a page marker as a cookie in the next
+	 * response page, so that you can then call {@link #waitForMarkedPage()} to
+	 * wait for it. This way you can be sure that it is a new page and won't
+	 * suffer from the StaleElementReferenceException.
+	 */
+	public void setResponsePageMarker(String marker) {
+		pageMarker = marker;
+		PageMarkingListener pml = findPageMarkingListener();
+		LOGGER.debug("Setting page marker to {}", pageMarker);
+		pml.setMarker(pageMarker);
+	}
+
+	private PageMarkingListener findPageMarkingListener() {
+		for (IRequestCycleListener l : Application.get()
+				.getRequestCycleListeners()) {
+			if (l instanceof PageMarkingListener) {
+				PageMarkingListener pml = (PageMarkingListener) l;
+				return pml;
 			}
-		});
+		}
+		throw new RuntimeException(
+				PageMarkingListener.class.getSimpleName()
+						+ " not found. Have you installed it in your Wicket application?");
+	}
+
+	/**
+	 * It waits until the browser sees a page with the page marker. Usually you
+	 * don't need to use this method because when you try to get an element and
+	 * if it is not found, Selenium has been configured to wait a few seconds.
+	 * But if the response page is the same as the original page, then it won't
+	 * work as that element will be found but when you try to use it, you will
+	 * get an StaleElementReferenceException. To work around the problem, call
+	 * {@link #setResponsePageMarker(String))} and then call this method.
+	 */
+	public void waitForMarkedPage() {
+		if (pageMarker == null) {
+			throw new RuntimeException(
+					"Must call setPageMarker() before calling this method");
+		}
+		new WebDriverWait(selenium, WAIT_TIMEOUT_IN_SECONDS)
+				.until(new Predicate<WebDriver>() {
+					public boolean apply(WebDriver input) {
+						Cookie marker = input
+								.manage()
+								.getCookieNamed(
+										PageMarkingListener.WPT_PAGE_MARKER_COOKIE_NAME);
+						if (marker != null) {
+							LOGGER.debug("Marker retrieved is {}",
+									marker.getValue());
+							if (marker.getValue().equals(pageMarker)) {
+								LOGGER.debug("Marker matched. Clearing it.");
+								pageMarker = null;
+								return true;
+							} else {
+								LOGGER.debug("Marker not matched");
+								return false;
+							}
+						} else {
+							LOGGER.debug("No marker found");
+							return false;
+						}
+					}
+				});
 	}
 
 	/**

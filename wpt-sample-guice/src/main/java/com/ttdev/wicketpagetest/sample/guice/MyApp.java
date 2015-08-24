@@ -23,6 +23,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 
 import com.ttdev.wicketpagetest.MockableGuiceBeanInjector;
+import com.ttdev.wicketpagetest.PageMarkingListener;
 
 public class MyApp extends WebApplication {
 	private String mockedUser;
@@ -39,6 +40,7 @@ public class MyApp extends WebApplication {
 		// the Guice component injector.
 		MockableGuiceBeanInjector.installInjector(this,
 				new GuiceComponentInjector(this, new MyModule()));
+		getRequestCycleListeners().add(new PageMarkingListener());
 	}
 
 	@Override

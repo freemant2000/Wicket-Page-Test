@@ -35,7 +35,7 @@ public class ThrottlingAjaxPage extends WebPage {
 		add(inputField);
 		AjaxFormComponentUpdatingBehavior onkeyupBehavior = new AjaxFormComponentUpdatingBehavior(
 				"onkeyup") {
-
+ 
 			private static final long serialVersionUID = 1L;
 
 			@Override

@@ -109,8 +109,9 @@ public class Page1Test {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(Page1.class);
 		assert ws.getValue(By.name("input")).equals("xyz");
+		ws.setResponsePageMarker();
 		ws.click(By.xpath("//input[@type='submit']"));
-		ws.waitUntilDomReady();
+		ws.waitForMarkedPage();
 		assert ws.getText(By.id("result")).equals("xyzxyz");
 	}
 }

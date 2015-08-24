@@ -21,11 +21,14 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 
+import com.ttdev.wicketpagetest.CatchResponsePageListener;
 import com.ttdev.wicketpagetest.MockableSpringBeanInjector;
+import com.ttdev.wicketpagetest.PageMarkingListener;
 
 public class MyApp extends WebApplication {
 	private String mockedUser;
-	
+	private CatchResponsePageListener crpl;
+
 	@Override
 	public Class<PageContainingForm> getHomePage() {
 		return PageContainingForm.class;
@@ -34,9 +37,21 @@ public class MyApp extends WebApplication {
 	@Override
 	protected void init() {
 		super.init();
-		MockableSpringBeanInjector.installInjector(this); 
-		
+		// this listener will be used to catch a response page
+		// belonging to a certain class (specified in the test
+		// cases). Then it will schedule a dummy page (basically
+		// empty).
+		crpl = new CatchResponsePageListener();
+		MockableSpringBeanInjector.installInjector(this);
+		getRequestCycleListeners().add(new PageMarkingListener());
+		getRequestCycleListeners().add(crpl);
+
 	}
+
+	public CatchResponsePageListener getCrpl() {
+		return crpl;
+	}
+
 	@Override
 	public Session newSession(Request request, Response response) {
 		return new MySession(request);
@@ -49,5 +64,5 @@ public class MyApp extends WebApplication {
 	public void setMockedUser(String mockedUser) {
 		this.mockedUser = mockedUser;
 	}
-	
+
 }

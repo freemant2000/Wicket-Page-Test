@@ -34,7 +34,7 @@ public class PageRefreshingTR extends WebPage {
 	public PageRefreshingTR() {
 		values = Arrays.asList(new Integer[] { 0, 0, 0 });
 		ListView<Integer> eachRow = new ListView<Integer>("eachRow", values) {
-
+ 
 			private static final long serialVersionUID = 1L;
 
 			@Override

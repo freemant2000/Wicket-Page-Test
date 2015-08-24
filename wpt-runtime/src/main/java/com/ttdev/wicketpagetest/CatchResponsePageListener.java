@@ -6,6 +6,8 @@ import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * If you are unit testing a page that renders another page as the response, in
@@ -18,28 +20,30 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
  * To avoid looping, an instance is meant to catch the response page only once.
  * To avoid catching the wrong thing, you should specify the class of the page
  * you're expecting. If you're expecting something more special, you can
- * override the {@link #isWaitingFor(IRequestHandler)} (for something not a page) or
- * {@link #isWaitingForPage(IRequestHandler)} (for a page but not defined by page class).
+ * override the {@link #isWaitingFor(IRequestHandler)} (for something not a
+ * page) or {@link #isWaitingForPage(IRequestHandler)} (for a page but not
+ * defined by page class).
  * <p>
- * See {@link IRequestCycleListener} to see how to install the listener.
+ * See {@link IRequestCycleListener} to see how to install the listener. Note
+ * that the listener list in the application is implemented by a copy-on-write
+ * array list. As a result, if you try to add the listener in your testing
+ * thread, the change will not be seen on the server side.
  * 
  * @author Kent Tong
  * 
  */
 public class CatchResponsePageListener extends AbstractRequestCycleListener {
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(CatchResponsePageListener.class);
 	private IRequestHandler handlerCaught;
 	private Class<? extends IRequestablePage> pageClassExpected;
 
 	/**
-	 * Create a listener to wait for a page render handler for a page instance
-	 * belong to a specified class.
-	 * 
-	 * @param pageClassExpected
-	 *            the page instance is expected to this class
+	 * Create a listener. You need to call {@link #setPageClassExpected(Class)}
+	 * in your testing thread.
 	 */
-	public CatchResponsePageListener(
-			Class<? extends IRequestablePage> pageClassExpected) {
-		this.pageClassExpected = pageClassExpected;
+	public CatchResponsePageListener() {
+
 	}
 
 	/**
@@ -49,15 +53,31 @@ public class CatchResponsePageListener extends AbstractRequestCycleListener {
 	@Override
 	public void onRequestHandlerScheduled(RequestCycle cycle,
 			IRequestHandler handler) {
+		LOGGER.debug("Called");
 		if (handlerCaught != null) {
+			LOGGER.debug("Already caught");
 			return; // used only once
 		}
+		if (pageClassExpected == null) {
+			LOGGER.debug("Nothing is being expected");
+			return;
+		}
 		if (isWaitingFor(handler)) {
+			LOGGER.debug("Found handler");
 			this.handlerCaught = handler;
 			cycle.setResponsePage(DummyResponsePage.class);
+		} else {
+			LOGGER.debug("Handler not matched");
 		}
 	}
 
+	/**
+	 * Start wait for a page render handler for a page instance belong to a
+	 * specified class.
+	 * 
+	 * @param pageClassExpected
+	 *            the page instance is expected to this class
+	 */
 	public void setPageClassExpected(
 			Class<? extends IRequestablePage> pageClassExpected) {
 		this.pageClassExpected = pageClassExpected;
@@ -86,6 +106,7 @@ public class CatchResponsePageListener extends AbstractRequestCycleListener {
 	 */
 	protected boolean isWaitingForPage(IRequestHandler handler) {
 		IRequestablePage page = getPageToRender(handler);
+		LOGGER.debug("Got a page: {}", page.getClass().getSimpleName());
 		return page != null && pageClassExpected.isInstance(page);
 	}
 

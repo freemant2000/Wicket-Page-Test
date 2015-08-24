@@ -60,8 +60,9 @@ public class PageCallingBackTestWithMethodCalls {
 		WicketSelenium ws = WebPageTestContext.getWicketSelenium();
 		ws.openBookmarkablePage(MyPageCallingBack.class);
 		ws.sendKeys(By.name("input"), "abc");
+		ws.setResponsePageMarker(); 
 		ws.click(By.xpath("//input[@type='submit']"));
-		ws.waitUntilDomReady();
+		ws.waitForMarkedPage();
 		assert input.equals("abc");
 	}
 }
