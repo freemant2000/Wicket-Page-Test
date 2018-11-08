@@ -42,6 +42,7 @@ Release the code on github
 ==========================
 
 git commit -a -m "some message"
+git push
 
 Create a release and then create a pull request.
 
