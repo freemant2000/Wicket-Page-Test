@@ -5,7 +5,6 @@ import javax.servlet.http.Cookie;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -38,6 +37,8 @@ public class PageMarkingListener extends AbstractRequestCycleListener {
 				WebResponse res = (WebResponse) (RequestCycle.get()
 						.getResponse());
 				Cookie cookie = new Cookie(WPT_PAGE_MARKER_COOKIE_NAME, marker);
+				// must use a fixed path otherwise there will be multiple
+				// cookies
 				cookie.setPath("/app");
 				res.addCookie(cookie);
 			}

@@ -3,6 +3,8 @@ To build
 
 To build it with Maven, do something like:
 
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+
 mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
     -Dwebdriver.chrome.driver=/home/kent/browser-drivers/chromedriver \
     package
@@ -25,16 +27,21 @@ Edit pom.xml to set the version:
 mvn versions:set -DnewVersion=3.0.0
 
 mvn versions:commit
+
+It seems we still need to manually edit the pom.xml file in each module
+manually.
     
 mvn -Dcom.ttdev.wicketpagetest.webdriver.class=org.openqa.selenium.chrome.ChromeDriver \
     -Dwebdriver.chrome.driver=/home/kent/browser-drivers/chromedriver \
     -Dgpg.passphrase=<GPG-SIGNING-KEY-PASSPHRASE> \
     clean deploy -P release
 
-Go to https://oss.sonatype.org, close and then release it. 
+Go to https://oss.sonatype.org, use "ttdev" to find the bundle, close and then release it. 
     
 Release the code on github
 ==========================
+
+git commit -a -m "some message"
 
 Create a release and then create a pull request.
 
@@ -48,9 +55,8 @@ Use Project Admin | File Manager to mark it as the default download.
 if the above doesn't work, close the shell and create a new one. Or, use the 
 web GUI to upload it and mark it as the default.
 
-2) update change log on wiki.
-3) add a new artifact group in tracker.
-4) email announcement.
+2) add a new milestone in "Bugs".
+3) email announcement.
 
 
 To deploy the website

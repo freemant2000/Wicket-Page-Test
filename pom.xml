@@ -5,12 +5,12 @@
 	<groupId>com.ttdev</groupId>
 	<artifactId>wicket-page-test</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0.1</version>
+	<version>3.0.2</version>
 	<name>wicket-page-test</name>
 	<description>A lightweight unit testing framework for Apache Wicket</description>
 	<url>http://wicketpagetest.sourceforge.net</url>
 	<properties>
-		<wpt.version>3.0.1</wpt.version>
+		<wpt.version>3.0.2</wpt.version>
 		<!-- 
 		<wicket.version>7.0.0</wicket.version>
 		 -->
