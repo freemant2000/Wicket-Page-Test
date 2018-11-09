@@ -2,7 +2,7 @@
 	<parent>
 		<artifactId>wicket-page-test</artifactId>
 		<groupId>com.ttdev</groupId>
-		<version>3.0.2</version>
+		<version>3.0.3</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ttdev</groupId>
@@ -11,7 +11,7 @@
 	<name>wpt-runtime-spring</name>
 	<properties>
 	    <!-- For Wicket 7's Spring bean injector, use Spring 4 -->
-		<spring.version>4.3.15.RELEASE</spring.version>
+		<spring.version>4.3.20.RELEASE</spring.version>
 	    <!-- For Wicket 6's Spring bean injector, use Spring 3
 		<spring.version>3.1.3.RELEASE</spring.version>
 		 -->

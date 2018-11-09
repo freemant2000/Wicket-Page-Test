@@ -41,10 +41,12 @@ Go to https://oss.sonatype.org, use "ttdev" to find the bundle, close and then r
 Release the code on github
 ==========================
 
+create a new branch & push the code to it.
+
 git commit -a -m "some message"
 git push
 
-Create a release and then create a pull request.
+Create a pull request and then a release.
 
 Release on sourceforge
 ====================== 
